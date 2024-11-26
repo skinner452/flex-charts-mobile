@@ -1,6 +1,24 @@
+import { Link, useRootNavigationState, useRouter } from "expo-router";
+import { useEffect } from "react";
 import { Text, View } from "react-native";
 
 export default function Index() {
+  const rootNavigationState = useRootNavigationState();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!rootNavigationState?.key) return;
+
+    // If the user is already logged in, redirect to the home page
+    if (true) {
+      router.replace("/authenticated");
+      return;
+    }
+
+    // If the user is not logged in, redirect to the login page
+    router.replace("/unauthenticated");
+  }, [rootNavigationState]);
+
   return (
     <View
       style={{
@@ -9,7 +27,7 @@ export default function Index() {
         alignItems: "center",
       }}
     >
-      <Text>Edit app/index.tsx to edit this screen.</Text>
+      <Text>Redirecting...</Text>
     </View>
   );
 }
