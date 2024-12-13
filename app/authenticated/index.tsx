@@ -1,6 +1,6 @@
 import { Text, View } from "react-native";
 
-export default function NewPage() {
+export default function Authenticated() {
   return (
     <View
       style={{

@@ -10,7 +10,7 @@ export default function Index() {
     if (!rootNavigationState?.key) return;
 
     // If the user is already logged in, redirect to the home page
-    if (true) {
+    if (false) {
       router.replace("/authenticated");
       return;
     }

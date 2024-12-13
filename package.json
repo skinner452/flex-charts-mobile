@@ -13,10 +13,10 @@
     "preset": "jest-expo"
   },
   "dependencies": {
-    "expo": "~52.0.11",
-    "expo-router": "~4.0.9",
+    "expo": "~52.0.18",
+    "expo-router": "4.0.11",
     "react": "18.3.1",
-    "react-native": "0.76.3"
+    "react-native": "0.76.5"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
