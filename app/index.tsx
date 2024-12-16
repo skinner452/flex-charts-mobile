@@ -1,23 +1,24 @@
-import { Link, useRootNavigationState, useRouter } from "expo-router";
-import { useEffect } from "react";
 import { Text, View } from "react-native";
 
+import { useAuthenticator } from "@aws-amplify/ui-react-native";
+import { Button } from "@aws-amplify/ui-react-native/dist/primitives";
+import { useAPI } from "@/hooks/useAPI";
+
 export default function Index() {
-  const rootNavigationState = useRootNavigationState();
-  const router = useRouter();
+  const authenticator = useAuthenticator();
+  const apiClient = useAPI();
 
-  useEffect(() => {
-    if (!rootNavigationState?.key) return;
-
-    // If the user is already logged in, redirect to the home page
-    if (false) {
-      router.replace("/authenticated");
-      return;
-    }
-
-    // If the user is not logged in, redirect to the login page
-    router.replace("/unauthenticated");
-  }, [rootNavigationState]);
+  const getMachines = () => {
+    apiClient
+      .get("machines")
+      .then(async (response) => {
+        const data = await response.json();
+        console.log(data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   return (
     <View
@@ -27,7 +28,10 @@ export default function Index() {
         alignItems: "center",
       }}
     >
-      <Text>Redirecting...</Text>
+      <Text>Home page!</Text>
+      <Text>Welcome {authenticator.user.userId}</Text>
+      <Button onPress={getMachines}>Get machines</Button>
+      <Button onPress={authenticator.signOut}>Sign out</Button>
     </View>
   );
 }

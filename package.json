@@ -13,10 +13,14 @@
     "preset": "jest-expo"
   },
   "dependencies": {
+    "@aws-amplify/react-native": "^1.1.6",
+    "@aws-amplify/ui-react-native": "^2.2.19",
+    "@react-native-async-storage/async-storage": "1.23.1",
+    "aws-amplify": "^6.10.3",
     "expo": "~52.0.18",
     "expo-router": "4.0.11",
     "react": "18.3.1",
-    "react-native": "0.76.5"
+    "react-native": "0.75"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
