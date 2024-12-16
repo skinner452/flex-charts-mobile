@@ -1,37 +1,38 @@
-import { Text, View } from "react-native";
-
 import { useAuthenticator } from "@aws-amplify/ui-react-native";
-import { Button } from "@aws-amplify/ui-react-native/dist/primitives";
-import { useAPI } from "@/hooks/useAPI";
+import { Button, Text } from "react-native-paper";
+import { useUserAttributes } from "@/hooks/useUserAttributes";
+import { useDarkMode } from "@/providers/DarkModeProvider";
+import { useRouter } from "expo-router";
+import { AppView } from "@/components/AppView";
 
 export default function Index() {
   const authenticator = useAuthenticator();
-  const apiClient = useAPI();
-
-  const getMachines = () => {
-    apiClient
-      .get("machines")
-      .then(async (response) => {
-        const data = await response.json();
-        console.log(data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
+  const userAttributes = useUserAttributes();
+  const { toggleDarkMode } = useDarkMode();
+  const router = useRouter();
 
   return (
-    <View
+    <AppView
       style={{
-        flex: 1,
         justifyContent: "center",
         alignItems: "center",
+        gap: 24,
       }}
     >
-      <Text>Home page!</Text>
-      <Text>Welcome {authenticator.user.userId}</Text>
-      <Button onPress={getMachines}>Get machines</Button>
-      <Button onPress={authenticator.signOut}>Sign out</Button>
-    </View>
+      <Text variant="headlineLarge">Welcome {userAttributes?.given_name}!</Text>
+      <Button
+        mode="contained"
+        icon="plus"
+        onPress={() => router.push("/session")}
+      >
+        Start a new session
+      </Button>
+      <Button onPress={toggleDarkMode} icon="theme-light-dark" mode="elevated">
+        Toggle dark mode
+      </Button>
+      <Button onPress={authenticator.signOut} mode="elevated">
+        Sign out
+      </Button>
+    </AppView>
   );
 }
