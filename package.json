@@ -8,7 +8,7 @@
     "ios": "expo start --ios",
     "test": "jest --watchAll",
     "lint": "expo lint",
-    "copy-types": "cp -r ../flex-charts-api/types ./types"
+    "copy-types": "cp -r ../flex-charts-api/types/ ./types"
   },
   "jest": {
     "preset": "jest-expo"
