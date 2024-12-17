@@ -3,7 +3,7 @@ import { useCallback } from "react";
 
 export const useAPI = () => {
   const query = useCallback(
-    async (method: string, endpoint: string, data: object | null) => {
+    async (method: string, endpoint: string, data?: object) => {
       const accessToken = (
         await fetchAuthSession()
       ).tokens?.accessToken.toString();
@@ -22,19 +22,19 @@ export const useAPI = () => {
   );
 
   const get = useCallback(
-    (endpoint: string) => query("GET", endpoint, null),
+    (endpoint: string) => query("GET", endpoint),
     [query]
   );
   const post = useCallback(
-    (endpoint: string, data: object) => query("POST", endpoint, data),
+    (endpoint: string, data?: object) => query("POST", endpoint, data),
     [query]
   );
   const put = useCallback(
-    (endpoint: string, data: object) => query("PUT", endpoint, data),
+    (endpoint: string, data?: object) => query("PUT", endpoint, data),
     [query]
   );
   const del = useCallback(
-    (endpoint: string, data: object) => query("DELETE", endpoint, data),
+    (endpoint: string) => query("DELETE", endpoint),
     [query]
   );
 
