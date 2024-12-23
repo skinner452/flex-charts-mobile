@@ -5,13 +5,23 @@ import {
 import { useEffect, useState } from "react";
 
 export const useUserAttributes = () => {
-  const [attributes, setAttributes] = useState<FetchUserAttributesOutput>();
+  const [userAttributes, setUserAttributes] =
+    useState<FetchUserAttributesOutput>();
+  const [userAttributesLoading, setUserAttributesLoading] = useState(true);
 
   useEffect(() => {
-    fetchUserAttributes().then((attributes) => {
-      setAttributes(attributes);
-    });
+    setUserAttributesLoading(true);
+    fetchUserAttributes()
+      .then((userAttributes) => {
+        setUserAttributes(userAttributes);
+      })
+      .finally(() => {
+        setUserAttributesLoading(false);
+      });
   }, []);
 
-  return attributes;
+  return {
+    userAttributes,
+    userAttributesLoading,
+  };
 };

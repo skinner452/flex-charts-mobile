@@ -7,32 +7,78 @@ import { AppView } from "@/components/AppView";
 import { useAPI } from "@/hooks/useAPI";
 import { useEffect, useState } from "react";
 import { Session } from "@/types/sessions";
+import { LoadingScreen } from "@/components/LoadingScreen";
+import { useAppDispatch } from "@/redux/hooks";
+import { setExercises } from "@/redux/slices/exercises";
+import { Exercise } from "@/types/exercises";
 
 export default function Index() {
   const authenticator = useAuthenticator();
-  const userAttributes = useUserAttributes();
+  const { userAttributes, userAttributesLoading } = useUserAttributes();
   const { toggleDarkMode } = useDarkMode();
   const router = useRouter();
   const apiClient = useAPI();
-  const [activeSession, setActiveSession] = useState<Session | null>(null);
+
+  const [activeSession, setActiveSession] = useState<Session>();
+  const [activeSessionLoading, setActiveSessionLoading] = useState(true);
+
+  const dispatch = useAppDispatch();
+
+  const [creatingSession, setCreatingSession] = useState(false);
 
   useEffect(() => {
-    apiClient.get("sessions?is_active=1").then(async (response) => {
-      const sessions = (await response.json()) as Session[];
-      setActiveSession(sessions[0]);
-    });
+    apiClient
+      .get("sessions?is_active=1")
+      .then(async (sessions: Session[]) => {
+        if (sessions.length > 0) setActiveSession(sessions[0]);
+      })
+      .finally(() => {
+        setActiveSessionLoading(false);
+      });
+  }, []);
+
+  useEffect(() => {
+    // Load exercises for redux
+    apiClient
+      .get("exercises")
+      .then(async (exercises: Exercise[]) => {
+        dispatch(setExercises(exercises));
+      })
+      .catch((error) => {
+        console.error("Failed to load exercises", error);
+      });
   }, []);
 
   const startNewSession = async () => {
-    const response = await apiClient.post("sessions");
-    const session = (await response.json()) as Session;
-    setActiveSession(session);
-    router.push(`/session`);
+    setCreatingSession(true);
+    apiClient
+      .post("sessions")
+      .then(async (session: Session) => {
+        setActiveSession(session);
+        router.push({
+          pathname: `/session`,
+          params: {
+            session_id: session.id,
+          },
+        });
+      })
+      .finally(() => {
+        setCreatingSession(false);
+      });
   };
 
   const resumeSession = async () => {
-    router.push(`/session`);
+    router.push({
+      pathname: `/session`,
+      params: {
+        session_id: activeSession?.id,
+      },
+    });
   };
+
+  if (userAttributesLoading || activeSessionLoading) {
+    return <LoadingScreen />;
+  }
 
   return (
     <AppView
@@ -48,7 +94,12 @@ export default function Index() {
           Resume session
         </Button>
       ) : (
-        <Button mode="contained" icon="plus" onPress={startNewSession}>
+        <Button
+          mode="contained"
+          icon="plus"
+          onPress={startNewSession}
+          loading={creatingSession}
+        >
           Start a new session
         </Button>
       )}
