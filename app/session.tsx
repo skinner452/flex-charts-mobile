@@ -12,8 +12,14 @@ import { Workout } from "@/types/workouts";
 import dayjs from "dayjs";
 import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import { View } from "react-native";
-import { Button, IconButton, Text, useTheme } from "react-native-paper";
+import { FlatList, View } from "react-native";
+import {
+  Button,
+  Divider,
+  IconButton,
+  Text,
+  useTheme,
+} from "react-native-paper";
 
 export default function Index() {
   const router = useRouter();
@@ -25,6 +31,10 @@ export default function Index() {
 
   const apiClient = useAPI();
   const [session, setSession] = useState<Session | null>(null);
+
+  const [deletingWorkoutID, setDeletingWorkoutID] = useState<number | null>(
+    null
+  );
 
   useEffect(() => {
     apiClient
@@ -63,6 +73,7 @@ export default function Index() {
   };
 
   const deleteWorkout = (workoutID: number) => {
+    setDeletingWorkoutID(workoutID);
     apiClient
       .del(`workouts/${workoutID}`)
       .then(() => {
@@ -70,6 +81,9 @@ export default function Index() {
       })
       .catch((error) => {
         console.error(error);
+      })
+      .finally(() => {
+        setDeletingWorkoutID(null);
       });
   };
 
@@ -80,11 +94,17 @@ export default function Index() {
       <Text variant="headlineLarge" style={{ textAlign: "center" }}>
         {dayjs(session.created_on).format("MMMM D, YYYY")}
       </Text>
-      <View style={{ flex: 1, gap: 16 }}>
-        {sessionWorkouts.map((workout) => (
+      <FlatList
+        data={sessionWorkouts}
+        ItemSeparatorComponent={() => <Divider style={{ marginVertical: 8 }} />}
+        renderItem={({ item: workout }) => (
           <View
             key={workout.id}
-            style={{ flexDirection: "row", alignItems: "center" }}
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              gap: 8,
+            }}
           >
             <Text variant="bodyLarge" style={{ flex: 1, fontWeight: "bold" }}>
               {workout.exercise.name}
@@ -96,13 +116,20 @@ export default function Index() {
               icon="delete"
               mode="contained"
               onPress={() => deleteWorkout(workout.id)}
+              loading={deletingWorkoutID === workout.id}
             />
           </View>
-        ))}
-        <Button mode="contained" onPress={addWorkout}>
-          Add workout
-        </Button>
-      </View>
+        )}
+        ListFooterComponent={
+          <Button
+            mode="contained"
+            onPress={addWorkout}
+            style={{ marginTop: 8 }}
+          >
+            Add workout
+          </Button>
+        }
+      />
       <FooterButtons
         primaryLabel="End session"
         primaryAction={() => {}}
