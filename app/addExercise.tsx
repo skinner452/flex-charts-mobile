@@ -26,7 +26,7 @@ export default function Index() {
         router.back();
       })
       .catch((error) => {
-        console.error(error);
+        console.error("Failed to create exercise", error);
       })
       .finally(() => {
         setIsLoading(false);

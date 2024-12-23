@@ -14,9 +14,8 @@ import { Dropdown } from "react-native-paper-dropdown";
 
 export default function Index() {
   const router = useRouter();
-  const params = useLocalSearchParams();
-  const { session_id } = params;
 
+  const activeSession = useAppSelector((state) => state.activeSession);
   const exercises = useAppSelector((state) => state.exercises);
   const exercisesLength = useRef(exercises.length);
   const dispatch = useAppDispatch();
@@ -51,14 +50,14 @@ export default function Index() {
         weight: parseFloat(weight),
         sets: parseInt(sets),
         reps: parseInt(reps),
-        sessionID: parseInt(session_id as string),
+        sessionID: activeSession?.id,
       } as WorkoutCreate)
       .then((workout: Workout) => {
         dispatch(addSessionWorkout(workout));
         router.back();
       })
       .catch((error) => {
-        console.error(error);
+        console.error("Failed to create workout", error);
       })
       .finally(() => {
         setIsLoading(false);

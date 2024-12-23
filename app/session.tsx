@@ -4,13 +4,16 @@ import { LoadingScreen } from "@/components/LoadingScreen";
 import { useAPI } from "@/hooks/useAPI";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import {
+  clearActiveSession,
+  setActiveSession,
+} from "@/redux/slices/activeSession";
+import {
   deleteSessionWorkout,
   setSessionWorkouts,
 } from "@/redux/slices/sessionWorkouts";
-import { Session } from "@/types/sessions";
 import { Workout } from "@/types/workouts";
 import dayjs from "dayjs";
-import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { FlatList, View } from "react-native";
 import {
@@ -23,37 +26,26 @@ import {
 
 export default function Index() {
   const router = useRouter();
-  const params = useLocalSearchParams();
-  const { session_id } = params;
 
   const sessionWorkouts = useAppSelector((state) => state.sessionWorkouts);
+  const activeSession = useAppSelector((state) => state.activeSession);
   const dispatch = useAppDispatch();
 
   const apiClient = useAPI();
-  const [session, setSession] = useState<Session | null>(null);
 
   const [deletingWorkoutID, setDeletingWorkoutID] = useState<number | null>(
     null
   );
+  const [endingSession, setEndingSession] = useState(false);
 
   useEffect(() => {
     apiClient
-      .get(`sessions/${session_id}`)
-      .then(async (session: Session) => {
-        setSession(session);
-      })
-      .catch(() => {
-        router.back();
-      });
-  }, []);
-
-  useEffect(() => {
-    apiClient
-      .get(`workouts?session_id=${session_id}`)
+      .get(`workouts?sessionID=${activeSession?.id}`)
       .then(async (workouts: Workout[]) => {
         dispatch(setSessionWorkouts(workouts));
       })
-      .catch(() => {
+      .catch((error) => {
+        console.error("Failed to load workouts", error);
         router.back();
       });
 
@@ -66,9 +58,6 @@ export default function Index() {
   const addWorkout = () => {
     router.navigate({
       pathname: "/addWorkout",
-      params: {
-        session_id: session_id,
-      },
     });
   };
 
@@ -87,12 +76,28 @@ export default function Index() {
       });
   };
 
-  if (session === null) return <LoadingScreen />;
+  const endSession = () => {
+    setEndingSession(true);
+    apiClient
+      .post(`sessions/${activeSession?.id}/end`)
+      .then(() => {
+        dispatch(clearActiveSession());
+        router.back();
+      })
+      .catch((error) => {
+        console.error("Failed to end session", error);
+      })
+      .finally(() => {
+        setEndingSession(false);
+      });
+  };
+
+  if (activeSession === null) return <LoadingScreen />;
 
   return (
     <AppView style={{ gap: 16 }}>
       <Text variant="headlineLarge" style={{ textAlign: "center" }}>
-        {dayjs(session.created_on).format("MMMM D, YYYY")}
+        {dayjs(activeSession.created_on).format("MMMM D, YYYY")}
       </Text>
       <FlatList
         data={sessionWorkouts}
@@ -132,7 +137,8 @@ export default function Index() {
       />
       <FooterButtons
         primaryLabel="End session"
-        primaryAction={() => {}}
+        primaryAction={() => endSession()}
+        primaryIsLoading={endingSession}
         secondaryLabel="Go back"
         secondaryAction={router.back}
       />

@@ -8,9 +8,10 @@ import { useAPI } from "@/hooks/useAPI";
 import { useEffect, useState } from "react";
 import { Session } from "@/types/sessions";
 import { LoadingScreen } from "@/components/LoadingScreen";
-import { useAppDispatch } from "@/redux/hooks";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { setExercises } from "@/redux/slices/exercises";
 import { Exercise } from "@/types/exercises";
+import { setActiveSession } from "@/redux/slices/activeSession";
 
 export default function Index() {
   const authenticator = useAuthenticator();
@@ -19,18 +20,23 @@ export default function Index() {
   const router = useRouter();
   const apiClient = useAPI();
 
-  const [activeSession, setActiveSession] = useState<Session>();
-  const [activeSessionLoading, setActiveSessionLoading] = useState(true);
-
+  const activeSession = useAppSelector((state) => state.activeSession);
   const dispatch = useAppDispatch();
 
+  const [activeSessionLoading, setActiveSessionLoading] = useState(true);
+  const [exercisesLoading, setExercisesLoading] = useState(true);
   const [creatingSession, setCreatingSession] = useState(false);
 
   useEffect(() => {
     apiClient
-      .get("sessions?is_active=1")
+      .get("sessions?isActive=1")
       .then(async (sessions: Session[]) => {
-        if (sessions.length > 0) setActiveSession(sessions[0]);
+        if (sessions.length > 0) {
+          dispatch(setActiveSession(sessions[0]));
+        }
+      })
+      .catch((error) => {
+        console.error("Failed to load active session", error);
       })
       .finally(() => {
         setActiveSessionLoading(false);
@@ -38,7 +44,7 @@ export default function Index() {
   }, []);
 
   useEffect(() => {
-    // Load exercises for redux
+    // Load all exercises for redux
     apiClient
       .get("exercises")
       .then(async (exercises: Exercise[]) => {
@@ -46,6 +52,9 @@ export default function Index() {
       })
       .catch((error) => {
         console.error("Failed to load exercises", error);
+      })
+      .finally(() => {
+        setExercisesLoading(false);
       });
   }, []);
 
@@ -54,13 +63,13 @@ export default function Index() {
     apiClient
       .post("sessions")
       .then(async (session: Session) => {
-        setActiveSession(session);
+        dispatch(setActiveSession(session));
         router.push({
           pathname: `/session`,
-          params: {
-            session_id: session.id,
-          },
         });
+      })
+      .catch((error) => {
+        console.error("Failed to create session", error);
       })
       .finally(() => {
         setCreatingSession(false);
@@ -70,13 +79,10 @@ export default function Index() {
   const resumeSession = async () => {
     router.push({
       pathname: `/session`,
-      params: {
-        session_id: activeSession?.id,
-      },
     });
   };
 
-  if (userAttributesLoading || activeSessionLoading) {
+  if (userAttributesLoading || activeSessionLoading || exercisesLoading) {
     return <LoadingScreen />;
   }
 
