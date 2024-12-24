@@ -2,7 +2,6 @@ import { AppView } from "@/components/AppView";
 import { ExerciseStatItemDisplay } from "@/components/ExerciseStatItem";
 import { FooterButtons } from "@/components/FooterButtons";
 import { FormItem } from "@/components/FormItem";
-import { TextInputWithUnits } from "@/components/TextInputWithUnits";
 import { useAPI } from "@/hooks/useAPI";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { addSessionWorkout } from "@/redux/slices/sessionWorkouts";
@@ -65,7 +64,7 @@ export default function Index() {
     router.push("/addExercise");
   };
 
-  const createWorkout = () => {
+  const addWorkout = () => {
     setIsLoading(true);
     apiClient
       .post("workouts", {
@@ -80,7 +79,7 @@ export default function Index() {
         router.back();
       })
       .catch((error) => {
-        console.error("Failed to create workout", error);
+        console.error("Failed to add workout", error);
       })
       .finally(() => {
         setIsLoading(false);
@@ -126,10 +125,9 @@ export default function Index() {
             ) : null}
           </FormItem>
 
-          <FormItem label="Weight">
-            <TextInputWithUnits
+          <FormItem label="Weight (lbs)">
+            <TextInput
               keyboardType="numeric"
-              units="lbs"
               onChangeText={(value) => setWeight(value)}
               value={weight}
             />
@@ -153,8 +151,8 @@ export default function Index() {
         </View>
       </ScrollView>
       <FooterButtons
-        primaryLabel="Create"
-        primaryAction={() => createWorkout()}
+        primaryLabel="Add"
+        primaryAction={() => addWorkout()}
         primaryIsLoading={isLoading}
         secondaryLabel="Go back"
         secondaryAction={router.back}
