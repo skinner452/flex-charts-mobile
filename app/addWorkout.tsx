@@ -5,9 +5,9 @@ import { FormItem } from "@/components/FormItem";
 import { useAPI } from "@/hooks/useAPI";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { addSessionWorkout } from "@/redux/slices/sessionWorkouts";
-import { ExerciseStatItem, ExerciseStats } from "@/types/exercises";
+import { ExerciseStats } from "@/types/exercises";
 import { Workout, WorkoutCreate } from "@/types/workouts";
-import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
 import { ScrollView, View } from "react-native";
 import { Button, Text, TextInput } from "react-native-paper";
@@ -107,7 +107,7 @@ export default function Index() {
               Add new exercise
             </Button>
 
-            {exerciseStats ? (
+            {exerciseStats?.best || exerciseStats?.last ? (
               <View style={{ flexDirection: "row", gap: 16 }}>
                 {exerciseStats.best ? (
                   <ExerciseStatItemDisplay
