@@ -1,10 +1,12 @@
 import { AppView } from "@/components/AppView";
+import { ExerciseStatItemDisplay } from "@/components/ExerciseStatItem";
 import { FooterButtons } from "@/components/FooterButtons";
 import { FormItem } from "@/components/FormItem";
 import { TextInputWithUnits } from "@/components/TextInputWithUnits";
 import { useAPI } from "@/hooks/useAPI";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { addSessionWorkout } from "@/redux/slices/sessionWorkouts";
+import { ExerciseStatItem, ExerciseStats } from "@/types/exercises";
 import { Workout, WorkoutCreate } from "@/types/workouts";
 import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
@@ -19,6 +21,10 @@ export default function Index() {
   const exercises = useAppSelector((state) => state.exercises);
   const exercisesLength = useRef(exercises.length);
   const dispatch = useAppDispatch();
+
+  const [exerciseStats, setExerciseStats] = useState<ExerciseStats | null>(
+    null
+  );
 
   const [exerciseId, setExerciseId] = useState("");
   const [weight, setWeight] = useState("");
@@ -37,6 +43,23 @@ export default function Index() {
       }
     }
   }, [exercises]);
+
+  const selectExercise = (exerciseID: string | undefined) => {
+    setExerciseId(exerciseID || "");
+    setExerciseStats(null);
+
+    if (exerciseID) {
+      // Load exercise stats
+      apiClient
+        .get(`exercises/${exerciseID}/stats`)
+        .then((stats: ExerciseStats) => {
+          setExerciseStats(stats);
+        })
+        .catch((error) => {
+          console.error("Failed to load exercise stats", error);
+        });
+    }
+  };
 
   const addNewExercise = () => {
     router.push("/addExercise");
@@ -78,12 +101,29 @@ export default function Index() {
                 label: exercise.name,
                 value: exercise.id.toString(),
               }))}
-              onSelect={(value) => setExerciseId(value ?? "")}
+              onSelect={selectExercise}
               value={exerciseId}
             />
             <Button mode="text" onPress={() => addNewExercise()}>
               Add new exercise
             </Button>
+
+            {exerciseStats ? (
+              <View style={{ flexDirection: "row", gap: 16 }}>
+                {exerciseStats.best ? (
+                  <ExerciseStatItemDisplay
+                    item={exerciseStats.best}
+                    label="Best"
+                  />
+                ) : null}
+                {exerciseStats.last ? (
+                  <ExerciseStatItemDisplay
+                    item={exerciseStats.last}
+                    label="Last"
+                  />
+                ) : null}
+              </View>
+            ) : null}
           </FormItem>
 
           <FormItem label="Weight">

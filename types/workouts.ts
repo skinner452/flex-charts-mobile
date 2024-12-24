@@ -2,6 +2,7 @@ import { Exercise } from "./exercises";
 
 export type Workout = {
   id: number;
+  sessionID: number;
   weight: number;
   reps: number;
   sets: number;
@@ -15,4 +16,8 @@ export type WorkoutCreate = {
   reps: number;
   sets: number;
   weight: number;
+};
+
+export type WorkoutFilters = {
+  sessionID?: number;
 };
