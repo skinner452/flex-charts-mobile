@@ -3,8 +3,8 @@ import { View } from "react-native";
 import { Button } from "react-native-paper";
 
 type Props = {
-  primaryLabel: string;
-  primaryAction: () => void;
+  primaryLabel?: string;
+  primaryAction?: () => void;
   primaryIsLoading?: boolean;
 
   secondaryLabel?: string;
@@ -27,15 +27,17 @@ export const FooterButtons = (props: Props) => {
         </View>
       ) : null}
 
-      <View style={{ flex: 1 }}>
-        <Button
-          mode="contained"
-          onPress={props.primaryAction}
-          loading={props.primaryIsLoading}
-        >
-          {props.primaryLabel}
-        </Button>
-      </View>
+      {props.primaryLabel ? (
+        <View style={{ flex: 1 }}>
+          <Button
+            mode="contained"
+            onPress={props.primaryAction}
+            loading={props.primaryIsLoading}
+          >
+            {props.primaryLabel}
+          </Button>
+        </View>
+      ) : null}
     </View>
   );
 };

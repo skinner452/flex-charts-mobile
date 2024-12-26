@@ -87,7 +87,7 @@ export default function Index() {
   };
 
   return (
-    <AppView style={{ gap: 16 }}>
+    <AppView>
       <View style={{ alignItems: "center" }}>
         <Text variant="headlineLarge">Add Workout</Text>
       </View>

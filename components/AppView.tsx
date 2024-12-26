@@ -13,7 +13,12 @@ export const AppView: React.FC<Props> = ({ children, style }) => {
   return (
     <SafeAreaView
       style={[
-        { flex: 1, padding: 12, backgroundColor: theme.colors.background },
+        {
+          flex: 1,
+          padding: 12,
+          gap: 16,
+          backgroundColor: theme.colors.background,
+        },
         style,
       ]}
     >

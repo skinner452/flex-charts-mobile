@@ -95,7 +95,7 @@ export default function Index() {
   if (activeSession === null) return <LoadingScreen />;
 
   return (
-    <AppView style={{ gap: 16 }}>
+    <AppView>
       <Text variant="headlineLarge" style={{ textAlign: "center" }}>
         {dayjs(activeSession.created_on).format("MMMM D, YYYY")}
       </Text>
@@ -104,7 +104,6 @@ export default function Index() {
         ItemSeparatorComponent={() => <Divider style={{ marginVertical: 8 }} />}
         renderItem={({ item: workout }) => (
           <View
-            key={workout.id}
             style={{
               flexDirection: "row",
               alignItems: "center",
@@ -137,7 +136,7 @@ export default function Index() {
       />
       <FooterButtons
         primaryLabel="End session"
-        primaryAction={() => endSession()}
+        primaryAction={endSession}
         primaryIsLoading={endingSession}
         secondaryLabel="Go back"
         secondaryAction={router.back}

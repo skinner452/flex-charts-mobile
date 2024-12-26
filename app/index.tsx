@@ -12,6 +12,7 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { setExercises } from "@/redux/slices/exercises";
 import { Exercise } from "@/types/exercises";
 import { setActiveSession } from "@/redux/slices/activeSession";
+import { setPastSessions } from "@/redux/slices/pastSessions";
 
 export default function Index() {
   const authenticator = useAuthenticator();
@@ -21,15 +22,17 @@ export default function Index() {
   const apiClient = useAPI();
 
   const activeSession = useAppSelector((state) => state.activeSession);
+  const pastSessions = useAppSelector((state) => state.pastSessions);
   const dispatch = useAppDispatch();
 
   const [activeSessionLoading, setActiveSessionLoading] = useState(true);
+  const [pastSessionsLoading, setPastSessionsLoading] = useState(true);
   const [exercisesLoading, setExercisesLoading] = useState(true);
   const [creatingSession, setCreatingSession] = useState(false);
 
   useEffect(() => {
     apiClient
-      .get("sessions?isActive=1")
+      .get("sessions?isActive=1&limit=1")
       .then(async (sessions: Session[]) => {
         if (sessions.length > 0) {
           dispatch(setActiveSession(sessions[0]));
@@ -40,6 +43,22 @@ export default function Index() {
       })
       .finally(() => {
         setActiveSessionLoading(false);
+      });
+  }, []);
+
+  useEffect(() => {
+    apiClient
+      .get("sessions?isActive=0")
+      .then(async (sessions: Session[]) => {
+        if (sessions.length > 0) {
+          dispatch(setPastSessions(sessions));
+        }
+      })
+      .catch((error) => {
+        console.error("Failed to load past sessions", error);
+      })
+      .finally(() => {
+        setPastSessionsLoading(false);
       });
   }, []);
 
@@ -82,7 +101,18 @@ export default function Index() {
     });
   };
 
-  if (userAttributesLoading || activeSessionLoading || exercisesLoading) {
+  const openSessionHistory = async () => {
+    router.push({
+      pathname: `/sessionHistory`,
+    });
+  };
+
+  if (
+    userAttributesLoading ||
+    activeSessionLoading ||
+    exercisesLoading ||
+    pastSessionsLoading
+  ) {
     return <LoadingScreen />;
   }
 
@@ -109,6 +139,12 @@ export default function Index() {
           Start a new session
         </Button>
       )}
+
+      {pastSessions.length > 0 ? (
+        <Button mode="elevated" icon="calendar" onPress={openSessionHistory}>
+          Session history
+        </Button>
+      ) : null}
 
       <Button onPress={toggleDarkMode} icon="theme-light-dark" mode="elevated">
         Toggle dark mode
