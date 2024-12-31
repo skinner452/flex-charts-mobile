@@ -1,9 +1,8 @@
 import { AppView } from "@/components/AppView";
 import { FooterButtons } from "@/components/FooterButtons";
 import { FormItem } from "@/components/FormItem";
-import { useAPI } from "@/hooks/useAPI";
-import { useAppDispatch } from "@/redux/hooks";
-import { addExercise } from "@/redux/slices/exercises";
+import { useAPIMutation } from "@/hooks/useAPI";
+import { Exercise } from "@/types/exercises";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import { ScrollView, View } from "react-native";
@@ -11,27 +10,14 @@ import { Button, Text, TextInput } from "react-native-paper";
 
 export default function Index() {
   const router = useRouter();
-  const apiClient = useAPI();
-  const dispatch = useAppDispatch();
+
+  const { mutate: createExercise, isPending: isCreatingExercise } =
+    useAPIMutation<Exercise>({
+      endpoint: "exercises",
+      method: "POST",
+    });
 
   const [name, setName] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-
-  const createExercise = () => {
-    setIsLoading(true);
-    apiClient
-      .post("exercises", { name })
-      .then(async (response) => {
-        dispatch(addExercise(response));
-        router.back();
-      })
-      .catch((error) => {
-        console.error("Failed to create exercise", error);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  };
 
   return (
     <AppView>
@@ -47,8 +33,8 @@ export default function Index() {
       </ScrollView>
       <FooterButtons
         primaryLabel="Create"
-        primaryAction={createExercise}
-        primaryIsLoading={isLoading}
+        primaryAction={() => createExercise({ data: { name } })}
+        primaryIsLoading={isCreatingExercise}
         secondaryLabel="Go back"
         secondaryAction={router.back}
       />

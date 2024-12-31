@@ -4,100 +4,51 @@ import { useUserAttributes } from "@/hooks/useUserAttributes";
 import { useDarkMode } from "@/providers/DarkModeProvider";
 import { useRouter } from "expo-router";
 import { AppView } from "@/components/AppView";
-import { useAPI } from "@/hooks/useAPI";
-import { useEffect, useState } from "react";
 import { Session } from "@/types/sessions";
 import { LoadingScreen } from "@/components/LoadingScreen";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { setExercises } from "@/redux/slices/exercises";
-import { Exercise } from "@/types/exercises";
-import { setActiveSession } from "@/redux/slices/activeSession";
-import { setPastSessions } from "@/redux/slices/pastSessions";
+import { invalidateQuery, useAPIMutation, useAPIQuery } from "@/hooks/useAPI";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function Index() {
   const authenticator = useAuthenticator();
-  const { userAttributes, userAttributesLoading } = useUserAttributes();
+  const { userAttributes } = useUserAttributes();
   const { toggleDarkMode } = useDarkMode();
   const router = useRouter();
-  const apiClient = useAPI();
 
-  const activeSession = useAppSelector((state) => state.activeSession);
-  const pastSessions = useAppSelector((state) => state.pastSessions);
-  const dispatch = useAppDispatch();
+  const queryClient = useQueryClient();
 
-  const [activeSessionLoading, setActiveSessionLoading] = useState(true);
-  const [pastSessionsLoading, setPastSessionsLoading] = useState(true);
-  const [exercisesLoading, setExercisesLoading] = useState(true);
-  const [creatingSession, setCreatingSession] = useState(false);
+  const { data: activeSessions } = useAPIQuery<Session[]>({
+    endpoint: "sessions",
+    params: { isActive: "1" },
+  });
 
-  useEffect(() => {
-    apiClient
-      .get("sessions?isActive=1&limit=1")
-      .then(async (sessions: Session[]) => {
-        if (sessions.length > 0) {
-          dispatch(setActiveSession(sessions[0]));
-        }
-      })
-      .catch((error) => {
-        console.error("Failed to load active session", error);
-      })
-      .finally(() => {
-        setActiveSessionLoading(false);
-      });
-  }, []);
+  const { data: pastSessions } = useAPIQuery<Session[]>({
+    endpoint: "sessions",
+    params: { isActive: "0" },
+  });
 
-  useEffect(() => {
-    apiClient
-      .get("sessions?isActive=0")
-      .then(async (sessions: Session[]) => {
-        if (sessions.length > 0) {
-          dispatch(setPastSessions(sessions));
-        }
-      })
-      .catch((error) => {
-        console.error("Failed to load past sessions", error);
-      })
-      .finally(() => {
-        setPastSessionsLoading(false);
-      });
-  }, []);
-
-  useEffect(() => {
-    // Load all exercises for redux
-    apiClient
-      .get("exercises")
-      .then(async (exercises: Exercise[]) => {
-        dispatch(setExercises(exercises));
-      })
-      .catch((error) => {
-        console.error("Failed to load exercises", error);
-      })
-      .finally(() => {
-        setExercisesLoading(false);
-      });
-  }, []);
-
-  const startNewSession = async () => {
-    setCreatingSession(true);
-    apiClient
-      .post("sessions")
-      .then(async (session: Session) => {
-        dispatch(setActiveSession(session));
+  const { mutate: createSession, isPending: isCreatingSession } =
+    useAPIMutation<Session>({
+      endpoint: "sessions",
+      method: "POST",
+      onSuccess: (session) => {
+        invalidateQuery(queryClient, {
+          endpoint: "sessions",
+          params: { isActive: "1" },
+        });
         router.push({
           pathname: `/session`,
+          params: { sessionID: session.id },
         });
-      })
-      .catch((error) => {
-        console.error("Failed to create session", error);
-      })
-      .finally(() => {
-        setCreatingSession(false);
-      });
-  };
+      },
+    });
 
   const resumeSession = async () => {
+    if (!activeSessions || activeSessions.length === 0) return;
+
     router.push({
       pathname: `/session`,
+      params: { sessionID: activeSessions[0].id.toString() },
     });
   };
 
@@ -107,12 +58,7 @@ export default function Index() {
     });
   };
 
-  if (
-    userAttributesLoading ||
-    activeSessionLoading ||
-    exercisesLoading ||
-    pastSessionsLoading
-  ) {
+  if (!userAttributes || !activeSessions || !pastSessions) {
     return <LoadingScreen />;
   }
 
@@ -125,7 +71,7 @@ export default function Index() {
       }}
     >
       <Text variant="headlineLarge">Welcome {userAttributes?.given_name}!</Text>
-      {activeSession ? (
+      {activeSessions.length > 0 ? (
         <Button mode="contained" icon="play" onPress={resumeSession}>
           Resume session
         </Button>
@@ -133,8 +79,8 @@ export default function Index() {
         <Button
           mode="contained"
           icon="plus"
-          onPress={startNewSession}
-          loading={creatingSession}
+          onPress={() => createSession({})}
+          loading={isCreatingSession}
         >
           Start a new session
         </Button>

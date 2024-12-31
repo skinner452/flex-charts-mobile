@@ -2,12 +2,12 @@ import { AppView } from "@/components/AppView";
 import { ExerciseStatItemDisplay } from "@/components/ExerciseStatItem";
 import { FooterButtons } from "@/components/FooterButtons";
 import { FormItem } from "@/components/FormItem";
-import { useAPI } from "@/hooks/useAPI";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { addSessionWorkout } from "@/redux/slices/sessionWorkouts";
-import { ExerciseStats } from "@/types/exercises";
+import { LoadingScreen } from "@/components/LoadingScreen";
+import { invalidateQuery, useAPIMutation, useAPIQuery } from "@/hooks/useAPI";
+import { Exercise, ExerciseStats } from "@/types/exercises";
 import { Workout, WorkoutCreate } from "@/types/workouts";
-import { useRouter } from "expo-router";
+import { useQueryClient } from "@tanstack/react-query";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
 import { ScrollView, View } from "react-native";
 import { Button, Text, TextInput } from "react-native-paper";
@@ -15,49 +15,48 @@ import { Dropdown } from "react-native-paper-dropdown";
 
 export default function Index() {
   const router = useRouter();
-
-  const activeSession = useAppSelector((state) => state.activeSession);
-  const exercises = useAppSelector((state) => state.exercises);
-  const exercisesLength = useRef(exercises.length);
-  const dispatch = useAppDispatch();
-
-  const [exerciseStats, setExerciseStats] = useState<ExerciseStats | null>(
-    null
-  );
+  const { sessionID } = useLocalSearchParams<{
+    sessionID: string;
+  }>();
 
   const [exerciseId, setExerciseId] = useState("");
   const [weight, setWeight] = useState("");
   const [sets, setSets] = useState("");
   const [reps, setReps] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
 
-  const apiClient = useAPI();
+  const queryClient = useQueryClient();
+
+  const { data: exercises } = useAPIQuery<Exercise[]>({
+    endpoint: "exercises",
+  });
+
+  const { data: exerciseStats } = useAPIQuery<ExerciseStats>({
+    endpoint: `exercises/${exerciseId}/stats`,
+    disabled: !exerciseId,
+  });
+
+  const { mutate: createWorkout, isPending: isCreatingWorkout } =
+    useAPIMutation<Workout>({
+      endpoint: "workouts",
+      method: "POST",
+      onSuccess: () => {
+        console.log("Workout created, invalidating cache");
+        invalidateQuery(queryClient, {
+          endpoint: "workouts",
+          params: {
+            sessionID: sessionID,
+          },
+        });
+        router.back();
+      },
+    });
 
   useEffect(() => {
-    // If the exercise length changes, a new exercise was added and we should automatically select it
-    if (exercises.length > exercisesLength.current) {
-      exercisesLength.current = exercises.length;
-      if (exercises.length > 0) {
-        setExerciseId(exercises[exercises.length - 1].id.toString());
-      }
-    }
-  }, [exercises]);
+    // TODO: If a new exercise is added while on this screen, we should automatically select it
+  }, []);
 
   const selectExercise = (exerciseID: string | undefined) => {
     setExerciseId(exerciseID || "");
-    setExerciseStats(null);
-
-    if (exerciseID) {
-      // Load exercise stats
-      apiClient
-        .get(`exercises/${exerciseID}/stats`)
-        .then((stats: ExerciseStats) => {
-          setExerciseStats(stats);
-        })
-        .catch((error) => {
-          console.error("Failed to load exercise stats", error);
-        });
-    }
   };
 
   const addNewExercise = () => {
@@ -65,26 +64,20 @@ export default function Index() {
   };
 
   const addWorkout = () => {
-    setIsLoading(true);
-    apiClient
-      .post("workouts", {
+    createWorkout({
+      data: {
+        sessionID: parseInt(sessionID),
         exerciseID: parseInt(exerciseId),
         weight: parseFloat(weight),
         sets: parseInt(sets),
         reps: parseInt(reps),
-        sessionID: activeSession?.id,
-      } as WorkoutCreate)
-      .then((workout: Workout) => {
-        dispatch(addSessionWorkout(workout));
-        router.back();
-      })
-      .catch((error) => {
-        console.error("Failed to add workout", error);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+      } as WorkoutCreate,
+    });
   };
+
+  if (!exercises) {
+    return <LoadingScreen />;
+  }
 
   return (
     <AppView>
@@ -153,7 +146,7 @@ export default function Index() {
       <FooterButtons
         primaryLabel="Add"
         primaryAction={() => addWorkout()}
-        primaryIsLoading={isLoading}
+        primaryIsLoading={isCreatingWorkout}
         secondaryLabel="Go back"
         secondaryAction={router.back}
       />

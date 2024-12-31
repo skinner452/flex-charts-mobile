@@ -2,12 +2,11 @@ import { Authenticator } from "@aws-amplify/ui-react-native";
 import { Stack } from "expo-router";
 import { PaperProvider, MD3LightTheme, MD3DarkTheme } from "react-native-paper";
 import { DarkModeProvider, useDarkMode } from "@/providers/DarkModeProvider";
-import { Provider } from "react-redux";
-import { store } from "@/redux/store";
 
 // Import the Amplify configuration
 import "@/amplifyConfig";
 import { signIn } from "aws-amplify/auth";
+import { QueryProvider } from "@/providers/QueryProvider";
 
 const App = () => {
   const { darkMode } = useDarkMode();
@@ -37,11 +36,11 @@ export default function RootLayout() {
           },
         }}
       >
-        <Provider store={store}>
+        <QueryProvider>
           <DarkModeProvider>
             <App />
           </DarkModeProvider>
-        </Provider>
+        </QueryProvider>
       </Authenticator>
     </Authenticator.Provider>
   );
