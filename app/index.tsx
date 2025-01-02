@@ -4,10 +4,9 @@ import { useUserAttributes } from "@/hooks/useUserAttributes";
 import { useDarkMode } from "@/providers/DarkModeProvider";
 import { useRouter } from "expo-router";
 import { AppView } from "@/components/AppView";
-import { Session } from "@/types/sessions";
 import { LoadingScreen } from "@/components/LoadingScreen";
-import { invalidateQuery, useAPIMutation, useAPIQuery } from "@/hooks/useAPI";
-import { useQueryClient } from "@tanstack/react-query";
+import { useGetSessions } from "@/api/routes/sessions/useGetSessions";
+import { usePostSessions } from "@/api/routes/sessions/usePostSessions";
 
 export default function Index() {
   const authenticator = useAuthenticator();
@@ -15,33 +14,21 @@ export default function Index() {
   const { toggleDarkMode } = useDarkMode();
   const router = useRouter();
 
-  const queryClient = useQueryClient();
+  const { data: activeSessions } = useGetSessions({ isActive: true });
+  const { data: pastSessions } = useGetSessions({ isActive: false });
 
-  const { data: activeSessions } = useAPIQuery<Session[]>({
-    endpoint: "sessions",
-    params: { isActive: "1" },
+  const postSessions = usePostSessions({
+    onSuccess: (session) => {
+      router.push({
+        pathname: `/session`,
+        params: { sessionID: session.id.toString() },
+      });
+    },
   });
 
-  const { data: pastSessions } = useAPIQuery<Session[]>({
-    endpoint: "sessions",
-    params: { isActive: "0" },
-  });
-
-  const { mutate: createSession, isPending: isCreatingSession } =
-    useAPIMutation<Session>({
-      endpoint: "sessions",
-      method: "POST",
-      onSuccess: (session) => {
-        invalidateQuery(queryClient, {
-          endpoint: "sessions",
-          params: { isActive: "1" },
-        });
-        router.push({
-          pathname: `/session`,
-          params: { sessionID: session.id },
-        });
-      },
-    });
+  const createSession = () => {
+    postSessions.mutate();
+  };
 
   const resumeSession = async () => {
     if (!activeSessions || activeSessions.length === 0) return;
@@ -79,8 +66,8 @@ export default function Index() {
         <Button
           mode="contained"
           icon="plus"
-          onPress={() => createSession({})}
-          loading={isCreatingSession}
+          onPress={createSession}
+          loading={postSessions.isPending}
         >
           Start a new session
         </Button>

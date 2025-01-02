@@ -1,10 +1,10 @@
+import { useGetSessionsId } from "@/api/routes/sessions/useGetSessionsId";
+import { usePostSessionsIdEnd } from "@/api/routes/sessions/usePostSessionsIdEnd";
+import { useDeleteWorkoutsId } from "@/api/routes/workouts/useDeleteWorkoutsId";
+import { useGetWorkouts } from "@/api/routes/workouts/useGetWorkouts";
 import { AppView } from "@/components/AppView";
 import { FooterButtons } from "@/components/FooterButtons";
 import { LoadingScreen } from "@/components/LoadingScreen";
-import { invalidateQuery, useAPIMutation, useAPIQuery } from "@/hooks/useAPI";
-import { Session } from "@/types/sessions";
-import { Workout } from "@/types/workouts";
-import { useQueryClient } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { FlatList, View } from "react-native";
@@ -16,42 +16,29 @@ export default function Index() {
     sessionID: string;
   }>();
 
-  const queryClient = useQueryClient();
+  const { data: session } = useGetSessionsId(parseInt(sessionID));
+  const { data: workouts } = useGetWorkouts({ sessionID: parseInt(sessionID) });
 
-  const { data: session, refetch: refetchSession } = useAPIQuery<Session>({
-    endpoint: `sessions/${sessionID}`,
+  const deleteWorkoutsId = useDeleteWorkoutsId();
+  const postSessionsIdEnd = usePostSessionsIdEnd(parseInt(sessionID), {
+    onSuccess: () => {
+      router.back();
+    },
   });
 
-  const { data: workouts } = useAPIQuery<Workout[]>({
-    endpoint: "workouts",
-    params: { sessionID },
-  });
-
-  const { mutate: deleteWorkout } = useAPIMutation<void>({
-    endpoint: "workouts",
-    method: "DELETE",
-  });
-
-  const { mutate: endSession, isPending: isEndingSession } =
-    useAPIMutation<void>({
-      endpoint: `sessions/${sessionID}/end`,
-      method: "POST",
-      onSuccess: () => {
-        invalidateQuery(queryClient, {
-          endpoint: "sessions",
-        });
-        router.back();
-      },
-      onError: () => {
-        refetchSession();
-      },
-    });
+  const endSession = () => {
+    postSessionsIdEnd.mutate();
+  };
 
   const addWorkout = () => {
     router.navigate({
       pathname: "/addWorkout",
       params: { sessionID },
     });
+  };
+
+  const deleteWorkout = (id: number) => {
+    deleteWorkoutsId.mutate(id);
   };
 
   if (!session || !workouts) {
@@ -86,7 +73,7 @@ export default function Index() {
               <IconButton
                 icon="delete"
                 mode="contained"
-                onPress={() => deleteWorkout({ id: workout.id })}
+                onPress={() => deleteWorkout(workout.id)}
                 loading={false} // TODO: Implement loading state for specific workout deletion
               />
             )}
@@ -106,8 +93,8 @@ export default function Index() {
       />
       <FooterButtons
         primaryLabel={isSessionEnded ? "" : "End session"}
-        primaryAction={() => endSession({})}
-        primaryIsLoading={isEndingSession}
+        primaryAction={endSession}
+        primaryIsLoading={postSessionsIdEnd.isPending}
         secondaryLabel="Go back"
         secondaryAction={router.back}
       />

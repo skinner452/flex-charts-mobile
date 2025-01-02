@@ -1,6 +1,6 @@
+import { useGetSessions } from "@/api/routes/sessions/useGetSessions";
 import { AppView } from "@/components/AppView";
 import { FooterButtons } from "@/components/FooterButtons";
-import { useAPIQuery } from "@/hooks/useAPI";
 import { Session } from "@/types/sessions";
 import dayjs from "dayjs";
 import { useRouter } from "expo-router";
@@ -10,10 +10,7 @@ import { Divider, Text } from "react-native-paper";
 export default function Index() {
   const router = useRouter();
 
-  const { data: pastSessions } = useAPIQuery<Session[]>({
-    endpoint: "sessions",
-    params: { isActive: 0 },
-  });
+  const { data: pastSessions } = useGetSessions({ isActive: false });
 
   const getSessionDate = (session: Session) => {
     return dayjs(session.created_on).format("MMMM D, YYYY");

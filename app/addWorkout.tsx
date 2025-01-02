@@ -1,11 +1,11 @@
+import { useGetExercises } from "@/api/routes/exercises/useGetExercises";
+import { useGetExercisesIdStats } from "@/api/routes/exercises/useGetExercisesIdStats";
+import { usePostWorkouts } from "@/api/routes/workouts/usePostWorkouts";
 import { AppView } from "@/components/AppView";
 import { ExerciseStatItemDisplay } from "@/components/ExerciseStatItem";
 import { FooterButtons } from "@/components/FooterButtons";
 import { FormItem } from "@/components/FormItem";
 import { LoadingScreen } from "@/components/LoadingScreen";
-import { invalidateQuery, useAPIMutation, useAPIQuery } from "@/hooks/useAPI";
-import { Exercise, ExerciseStats } from "@/types/exercises";
-import { Workout, WorkoutCreate } from "@/types/workouts";
 import { useQueryClient } from "@tanstack/react-query";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
@@ -24,32 +24,17 @@ export default function Index() {
   const [sets, setSets] = useState("");
   const [reps, setReps] = useState("");
 
-  const queryClient = useQueryClient();
+  const { data: exercises } = useGetExercises();
+  const { data: exerciseStats } = useGetExercisesIdStats(
+    exerciseId ? parseInt(exerciseId) : 0,
+    { enabled: !!exerciseId }
+  );
 
-  const { data: exercises } = useAPIQuery<Exercise[]>({
-    endpoint: "exercises",
+  const postWorkouts = usePostWorkouts({
+    onSuccess: () => {
+      router.back();
+    },
   });
-
-  const { data: exerciseStats } = useAPIQuery<ExerciseStats>({
-    endpoint: `exercises/${exerciseId}/stats`,
-    disabled: !exerciseId,
-  });
-
-  const { mutate: createWorkout, isPending: isCreatingWorkout } =
-    useAPIMutation<Workout>({
-      endpoint: "workouts",
-      method: "POST",
-      onSuccess: () => {
-        console.log("Workout created, invalidating cache");
-        invalidateQuery(queryClient, {
-          endpoint: "workouts",
-          params: {
-            sessionID: sessionID,
-          },
-        });
-        router.back();
-      },
-    });
 
   useEffect(() => {
     // TODO: If a new exercise is added while on this screen, we should automatically select it
@@ -63,15 +48,13 @@ export default function Index() {
     router.push("/addExercise");
   };
 
-  const addWorkout = () => {
-    createWorkout({
-      data: {
-        sessionID: parseInt(sessionID),
-        exerciseID: parseInt(exerciseId),
-        weight: parseFloat(weight),
-        sets: parseInt(sets),
-        reps: parseInt(reps),
-      } as WorkoutCreate,
+  const createWorkout = () => {
+    postWorkouts.mutate({
+      sessionID: parseInt(sessionID),
+      exerciseID: parseInt(exerciseId),
+      weight: parseFloat(weight),
+      sets: parseInt(sets),
+      reps: parseInt(reps),
     });
   };
 
@@ -145,8 +128,8 @@ export default function Index() {
       </ScrollView>
       <FooterButtons
         primaryLabel="Add"
-        primaryAction={() => addWorkout()}
-        primaryIsLoading={isCreatingWorkout}
+        primaryAction={createWorkout}
+        primaryIsLoading={postWorkouts.isPending}
         secondaryLabel="Go back"
         secondaryAction={router.back}
       />
