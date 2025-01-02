@@ -1,8 +1,7 @@
+import { usePostExercises } from "@/api/routes/exercises/usePostExercises";
 import { AppView } from "@/components/AppView";
 import { FooterButtons } from "@/components/FooterButtons";
 import { FormItem } from "@/components/FormItem";
-import { useAPIMutation } from "@/hooks/useAPI";
-import { Exercise } from "@/types/exercises";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import { ScrollView, View } from "react-native";
@@ -11,13 +10,15 @@ import { Button, Text, TextInput } from "react-native-paper";
 export default function Index() {
   const router = useRouter();
 
-  const { mutate: createExercise, isPending: isCreatingExercise } =
-    useAPIMutation<Exercise>({
-      endpoint: "exercises",
-      method: "POST",
-    });
-
   const [name, setName] = useState("");
+
+  const postExercise = usePostExercises();
+
+  const createExercise = () => {
+    postExercise.mutate({
+      name,
+    });
+  };
 
   return (
     <AppView>
@@ -33,8 +34,8 @@ export default function Index() {
       </ScrollView>
       <FooterButtons
         primaryLabel="Create"
-        primaryAction={() => createExercise({ data: { name } })}
-        primaryIsLoading={isCreatingExercise}
+        primaryAction={createExercise}
+        primaryIsLoading={postExercise.isPending}
         secondaryLabel="Go back"
         secondaryAction={router.back}
       />
