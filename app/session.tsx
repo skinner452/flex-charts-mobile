@@ -35,6 +35,9 @@ export default function Index() {
     onSuccess: () => {
       router.back();
     },
+    onError: (error) => {
+      console.error(error);
+    },
   });
 
   const endSession = () => {

@@ -25,6 +25,9 @@ export default function Index() {
           params: { sessionID: session.id.toString() },
         });
       },
+      onError: (error) => {
+        console.error(error);
+      },
     });
 
   const resumeSession = async () => {
