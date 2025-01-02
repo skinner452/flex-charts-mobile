@@ -21,7 +21,7 @@ export const FooterButtons = (props: Props) => {
     >
       {props.secondaryLabel ? (
         <View style={{ flex: 1 }}>
-          <Button mode="elevated" onPress={props.secondaryAction}>
+          <Button mode="elevated" onPress={() => props.secondaryAction?.()}>
             Go back
           </Button>
         </View>
@@ -31,7 +31,7 @@ export const FooterButtons = (props: Props) => {
         <View style={{ flex: 1 }}>
           <Button
             mode="contained"
-            onPress={props.primaryAction}
+            onPress={() => props.primaryAction?.()}
             loading={props.primaryIsLoading}
           >
             {props.primaryLabel}

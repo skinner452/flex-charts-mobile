@@ -17,9 +17,20 @@ export default function Index() {
   }>();
 
   const { data: session } = useGetSessionsId(parseInt(sessionID));
-  const { data: workouts } = useGetWorkouts({ sessionID: parseInt(sessionID) });
+  const { data: workouts } = useGetWorkouts({
+    sessionID: parseInt(sessionID),
+  });
 
-  const deleteWorkoutsId = useDeleteWorkoutsId();
+  const {
+    mutate: deleteWorkout,
+    variables: deletingWorkout,
+    isPending: isDeletingWorkout,
+  } = useDeleteWorkoutsId({
+    onError: (error) => {
+      console.error(error);
+    },
+  });
+
   const postSessionsIdEnd = usePostSessionsIdEnd(parseInt(sessionID), {
     onSuccess: () => {
       router.back();
@@ -35,10 +46,6 @@ export default function Index() {
       pathname: "/addWorkout",
       params: { sessionID },
     });
-  };
-
-  const deleteWorkout = (id: number) => {
-    deleteWorkoutsId.mutate(id);
   };
 
   if (!session || !workouts) {
@@ -73,8 +80,8 @@ export default function Index() {
               <IconButton
                 icon="delete"
                 mode="contained"
-                onPress={() => deleteWorkout(workout.id)}
-                loading={false} // TODO: Implement loading state for specific workout deletion
+                onPress={() => deleteWorkout(workout)}
+                loading={isDeletingWorkout && deletingWorkout.id === workout.id}
               />
             )}
           </View>
@@ -83,7 +90,7 @@ export default function Index() {
           isSessionEnded ? null : (
             <Button
               mode="contained"
-              onPress={addWorkout}
+              onPress={() => addWorkout()}
               style={{ marginTop: 8 }}
             >
               Add workout

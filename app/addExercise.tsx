@@ -5,17 +5,26 @@ import { FormItem } from "@/components/FormItem";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import { ScrollView, View } from "react-native";
-import { Button, Text, TextInput } from "react-native-paper";
+import { Text, TextInput } from "react-native-paper";
 
 export default function Index() {
   const router = useRouter();
 
   const [name, setName] = useState("");
 
-  const postExercise = usePostExercises();
+  const { mutate: createExercise, isPending: isCreatingExercise } =
+    usePostExercises({
+      onError: (error) => {
+        console.error(error);
+      },
+      onSuccess: (newExercise) => {
+        router.back();
+        router.setParams({ newExerciseID: newExercise.id });
+      },
+    });
 
-  const createExercise = () => {
-    postExercise.mutate({
+  const createExerciseWithData = () => {
+    createExercise({
       name,
     });
   };
@@ -34,8 +43,8 @@ export default function Index() {
       </ScrollView>
       <FooterButtons
         primaryLabel="Create"
-        primaryAction={createExercise}
-        primaryIsLoading={postExercise.isPending}
+        primaryAction={() => createExerciseWithData()}
+        primaryIsLoading={isCreatingExercise}
         secondaryLabel="Go back"
         secondaryAction={router.back}
       />

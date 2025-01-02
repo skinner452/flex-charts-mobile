@@ -6,17 +6,17 @@ import { ExerciseStatItemDisplay } from "@/components/ExerciseStatItem";
 import { FooterButtons } from "@/components/FooterButtons";
 import { FormItem } from "@/components/FormItem";
 import { LoadingScreen } from "@/components/LoadingScreen";
-import { useQueryClient } from "@tanstack/react-query";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ScrollView, View } from "react-native";
 import { Button, Text, TextInput } from "react-native-paper";
 import { Dropdown } from "react-native-paper-dropdown";
 
 export default function Index() {
   const router = useRouter();
-  const { sessionID } = useLocalSearchParams<{
+  const { sessionID, newExerciseID } = useLocalSearchParams<{
     sessionID: string;
+    newExerciseID?: string;
   }>();
 
   const [exerciseId, setExerciseId] = useState("");
@@ -30,15 +30,28 @@ export default function Index() {
     { enabled: !!exerciseId }
   );
 
-  const postWorkouts = usePostWorkouts({
-    onSuccess: () => {
-      router.back();
-    },
-  });
+  const { mutate: createWorkout, isPending: isCreatingWorkout } =
+    usePostWorkouts({
+      onSuccess: () => {
+        router.back();
+      },
+      onError: (error) => {
+        console.error(error);
+      },
+    });
 
   useEffect(() => {
-    // TODO: If a new exercise is added while on this screen, we should automatically select it
-  }, []);
+    // When returning from adding a new exercise, select the new exercise
+    if (!newExerciseID || !exercises) return;
+
+    const exercise = exercises.find(
+      (exercise) => exercise.id === parseInt(newExerciseID)
+    );
+    if (exercise) {
+      setExerciseId(newExerciseID);
+      router.setParams({ newExerciseID: undefined });
+    }
+  }, [exercises, newExerciseID]);
 
   const selectExercise = (exerciseID: string | undefined) => {
     setExerciseId(exerciseID || "");
@@ -48,8 +61,8 @@ export default function Index() {
     router.push("/addExercise");
   };
 
-  const createWorkout = () => {
-    postWorkouts.mutate({
+  const createWorkoutWithData = () => {
+    createWorkout({
       sessionID: parseInt(sessionID),
       exerciseID: parseInt(exerciseId),
       weight: parseFloat(weight),
@@ -128,8 +141,8 @@ export default function Index() {
       </ScrollView>
       <FooterButtons
         primaryLabel="Add"
-        primaryAction={createWorkout}
-        primaryIsLoading={postWorkouts.isPending}
+        primaryAction={() => createWorkoutWithData()}
+        primaryIsLoading={isCreatingWorkout}
         secondaryLabel="Go back"
         secondaryAction={router.back}
       />
