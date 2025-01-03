@@ -33,6 +33,7 @@ export const FooterButtons = (props: Props) => {
             mode="contained"
             onPress={() => props.primaryAction?.()}
             loading={props.primaryIsLoading}
+            disabled={props.primaryIsLoading}
           >
             {props.primaryLabel}
           </Button>

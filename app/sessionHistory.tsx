@@ -4,8 +4,8 @@ import { FooterButtons } from "@/components/FooterButtons";
 import { Session } from "@/types/sessions";
 import dayjs from "dayjs";
 import { useRouter } from "expo-router";
-import { FlatList, Pressable, View } from "react-native";
-import { Divider, Text } from "react-native-paper";
+import { FlatList, Pressable, TouchableHighlight, View } from "react-native";
+import { Divider, Text, TouchableRipple } from "react-native-paper";
 
 export default function Index() {
   const router = useRouter();
@@ -16,11 +16,8 @@ export default function Index() {
     return dayjs(session.created_on).format("MMMM D, YYYY");
   };
 
-  const getSessionDuration = (session: Session) => {
-    const minutes = dayjs(session.ended_on).diff(session.created_on, "minutes");
-    const hours = Math.floor(minutes / 60);
-    const remainingMinutes = minutes - hours * 60;
-    return `${hours}h ${remainingMinutes}m`;
+  const getSessionTime = (time: string) => {
+    return dayjs(time).format("h:mm A");
   };
 
   const openSession = (session: Session) => {
@@ -37,20 +34,25 @@ export default function Index() {
       </Text>
       <FlatList
         style={{ flex: 1 }}
-        ItemSeparatorComponent={() => <Divider style={{ marginVertical: 8 }} />}
+        ItemSeparatorComponent={() => <Divider />}
         data={pastSessions}
         renderItem={({ item: session }) => (
-          <Pressable
-            style={{
-              flexDirection: "row",
-              gap: 8,
-              justifyContent: "space-between",
-            }}
-            onPress={() => openSession(session)}
-          >
-            <Text>{getSessionDate(session)}</Text>
-            <Text>{getSessionDuration(session)}</Text>
-          </Pressable>
+          <TouchableRipple onPress={() => openSession(session)}>
+            <View
+              style={{
+                flexDirection: "row",
+                gap: 8,
+                justifyContent: "space-between",
+                padding: 16,
+              }}
+            >
+              <Text>{getSessionDate(session)}</Text>
+              <Text>
+                {getSessionTime(session.created_on)} -{" "}
+                {getSessionTime(session.ended_on ?? "")}
+              </Text>
+            </View>
+          </TouchableRipple>
         )}
       />
       <FooterButtons secondaryLabel="Go back" secondaryAction={router.back} />

@@ -68,6 +68,7 @@ export default function Index() {
           icon="plus"
           onPress={() => createSession()}
           loading={isCreatingSession}
+          disabled={isCreatingSession}
         >
           Start a new session
         </Button>

@@ -85,6 +85,9 @@ export default function Index() {
                 mode="contained"
                 onPress={() => deleteWorkout(workout)}
                 loading={isDeletingWorkout && deletingWorkout.id === workout.id}
+                disabled={
+                  isDeletingWorkout && deletingWorkout.id === workout.id
+                }
               />
             )}
           </View>
