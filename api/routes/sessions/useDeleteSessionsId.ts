@@ -7,9 +7,9 @@ import {
 import { useGetSessionsQueryKey } from "./useGetSessions";
 import { useGetSessionsIdQueryKey } from "./useGetSessionsId";
 
-const getEndpoint = (id: number) => `sessions/${id}/end`;
+const getEndpoint = (id: number) => `sessions/${id}`;
 
-export const usePostSessionsIdEnd = (
+export const useDeleteSessionsId = (
   id: number,
   options?: Partial<UseMutationOptions>
 ) => {
@@ -19,7 +19,7 @@ export const usePostSessionsIdEnd = (
     ...options,
     mutationFn: () =>
       fetchFromAPI({
-        method: "POST",
+        method: "DELETE",
         endpoint: getEndpoint(id),
       }),
     onSuccess: (...rest) => {

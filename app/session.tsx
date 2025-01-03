@@ -1,3 +1,4 @@
+import { useDeleteSessionsId } from "@/api/routes/sessions/useDeleteSessionsId";
 import { useGetSessionsId } from "@/api/routes/sessions/useGetSessionsId";
 import { usePostSessionsIdEnd } from "@/api/routes/sessions/usePostSessionsIdEnd";
 import { useDeleteWorkoutsId } from "@/api/routes/workouts/useDeleteWorkoutsId";
@@ -5,6 +6,7 @@ import { useGetWorkouts } from "@/api/routes/workouts/useGetWorkouts";
 import { AppView } from "@/components/AppView";
 import { FooterButtons } from "@/components/FooterButtons";
 import { LoadingScreen } from "@/components/LoadingScreen";
+import { useDialog } from "@/providers/DialogProvider";
 import dayjs from "dayjs";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { FlatList, View } from "react-native";
@@ -21,6 +23,8 @@ export default function Index() {
     sessionID: parseInt(sessionID),
   });
 
+  const { createDialog } = useDialog();
+
   const {
     mutate: deleteWorkout,
     variables: deletingWorkout,
@@ -31,17 +35,52 @@ export default function Index() {
     },
   });
 
-  const postSessionsIdEnd = usePostSessionsIdEnd(parseInt(sessionID), {
-    onSuccess: () => {
-      router.back();
-    },
-    onError: (error) => {
-      console.error(error);
-    },
-  });
+  const { mutateAsync: endSessionAsync, isPending: isEndingSession } =
+    usePostSessionsIdEnd(parseInt(sessionID), {
+      onSuccess: () => {
+        router.back();
+      },
+      onError: (error) => {
+        console.error(error);
+      },
+    });
+
+  const { mutateAsync: deleteSessionAsync } = useDeleteSessionsId(
+    parseInt(sessionID),
+    {
+      onSuccess: () => {
+        router.back();
+      },
+      onError: (error) => {
+        console.error(error);
+      },
+    }
+  );
 
   const endSession = () => {
-    postSessionsIdEnd.mutate();
+    if (workouts && workouts.length === 0) {
+      // Prompt user to delete the session instead
+      createDialog({
+        title: "Empty session",
+        content: "This session has no workouts. How would you like to proceed?",
+        actions: [
+          {
+            label: "Cancel",
+            callback: () => {},
+          },
+          {
+            label: "End session",
+            callback: async () => await endSessionAsync(),
+          },
+          {
+            label: "Delete session",
+            callback: async () => await deleteSessionAsync(),
+          },
+        ],
+      });
+    } else {
+      endSessionAsync();
+    }
   };
 
   const addWorkout = () => {
@@ -107,7 +146,7 @@ export default function Index() {
       <FooterButtons
         primaryLabel={isSessionEnded ? "" : "End session"}
         primaryAction={endSession}
-        primaryIsLoading={postSessionsIdEnd.isPending}
+        primaryIsLoading={isEndingSession}
         secondaryLabel="Go back"
         secondaryAction={router.back}
       />
