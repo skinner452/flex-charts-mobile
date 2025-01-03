@@ -1,3 +1,4 @@
+import { defaultQueryOptions } from "@/api/base/defaultQueryOptions";
 import { fetchFromAPI } from "@/api/base/fetchFromAPI";
 import { getQueryKey } from "@/api/base/queryKey";
 import { Workout, WorkoutFilters } from "@/types/workouts";
@@ -13,6 +14,7 @@ export const useGetWorkouts = (
   options?: Partial<UseQueryOptions<Workout[]>>
 ) => {
   return useQuery({
+    ...defaultQueryOptions,
     ...options,
     queryFn: () =>
       fetchFromAPI<Workout[]>({

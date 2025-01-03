@@ -1,3 +1,4 @@
+import { defaultQueryOptions } from "@/api/base/defaultQueryOptions";
 import { fetchFromAPI } from "@/api/base/fetchFromAPI";
 import { getQueryKey } from "@/api/base/queryKey";
 import { ExerciseStats } from "@/types/exercises";
@@ -13,6 +14,7 @@ export const useGetExercisesIdStats = (
   options?: Partial<UseQueryOptions<ExerciseStats>>
 ) => {
   return useQuery({
+    ...defaultQueryOptions,
     ...options,
     queryFn: () =>
       fetchFromAPI<ExerciseStats>({ method: "GET", endpoint: getEndpoint(id) }),

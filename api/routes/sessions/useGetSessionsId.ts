@@ -1,3 +1,4 @@
+import { defaultQueryOptions } from "@/api/base/defaultQueryOptions";
 import { fetchFromAPI } from "@/api/base/fetchFromAPI";
 import { getQueryKey } from "@/api/base/queryKey";
 import { Session } from "@/types/sessions";
@@ -13,6 +14,7 @@ export const useGetSessionsId = (
   options?: Partial<UseQueryOptions<Session>>
 ) => {
   return useQuery({
+    ...defaultQueryOptions,
     ...options,
     queryFn: () =>
       fetchFromAPI<Session>({ method: "GET", endpoint: getEndpoint(id) }),

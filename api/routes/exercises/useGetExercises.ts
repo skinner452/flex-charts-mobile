@@ -1,3 +1,4 @@
+import { defaultQueryOptions } from "@/api/base/defaultQueryOptions";
 import { fetchFromAPI } from "@/api/base/fetchFromAPI";
 import { getQueryKey } from "@/api/base/queryKey";
 import { Exercise } from "@/types/exercises";
@@ -11,6 +12,7 @@ export const useGetExercises = (
   options?: Partial<UseQueryOptions<Exercise[]>>
 ) => {
   return useQuery({
+    ...defaultQueryOptions,
     ...options,
     queryFn: () => fetchFromAPI<Exercise[]>({ method: "GET", endpoint }),
     queryKey: useGetExercisesQueryKey(),
