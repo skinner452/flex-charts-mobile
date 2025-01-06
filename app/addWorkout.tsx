@@ -24,7 +24,7 @@ export default function Index() {
   const [sets, setSets] = useState("");
   const [reps, setReps] = useState("");
 
-  const { data: exercises } = useGetExercises();
+  const { data: exercises, isLoading: isExercisesLoading } = useGetExercises();
   const { data: exerciseStats } = useGetExercisesIdStats(
     exerciseId ? parseInt(exerciseId) : 0,
     { enabled: !!exerciseId }
@@ -71,8 +71,13 @@ export default function Index() {
     });
   };
 
-  if (!exercises) {
+  if (isExercisesLoading) {
     return <LoadingScreen />;
+  }
+
+  // TODO: Handle error states
+  if (!exercises) {
+    return null;
   }
 
   return (

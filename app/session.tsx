@@ -6,6 +6,7 @@ import { useGetWorkouts } from "@/api/routes/workouts/useGetWorkouts";
 import { AppView } from "@/components/AppView";
 import { FooterButtons } from "@/components/FooterButtons";
 import { LoadingScreen } from "@/components/LoadingScreen";
+import { useDuration } from "@/hooks/useDuration";
 import { useDialog } from "@/providers/DialogProvider";
 import dayjs from "dayjs";
 import { useLocalSearchParams, useRouter } from "expo-router";
@@ -18,10 +19,22 @@ export default function Index() {
     sessionID: string;
   }>();
 
-  const { data: session } = useGetSessionsId(parseInt(sessionID));
-  const { data: workouts } = useGetWorkouts({
+  const { data: session, isLoading: isSessionLoading } = useGetSessionsId(
+    parseInt(sessionID)
+  );
+  const { data: workouts, isLoading: isWorkoutsLoading } = useGetWorkouts({
     sessionID: parseInt(sessionID),
   });
+
+  const duration = useDuration(
+    session
+      ? {
+          startTime: session.created_on,
+          endTime: session.ended_on,
+          format: session.ended_on ? "pretty" : "ticker",
+        }
+      : undefined
+  );
 
   const { createDialog } = useDialog();
 
@@ -90,17 +103,32 @@ export default function Index() {
     });
   };
 
-  if (!session || !workouts) {
+  if (isSessionLoading || isWorkoutsLoading) {
     return <LoadingScreen />;
+  }
+
+  // TODO: Handle error states
+  if (!session || !workouts) {
+    return null;
   }
 
   const isSessionEnded = session.ended_on !== null;
 
   return (
     <AppView>
-      <Text variant="headlineLarge" style={{ textAlign: "center" }}>
-        {dayjs(session.created_on).format("MMMM D, YYYY")}
-      </Text>
+      <View style={{ alignItems: "center" }}>
+        <Text variant="headlineLarge">
+          {dayjs(session.created_on).format("MMMM D, YYYY")}
+        </Text>
+        <Text variant="labelLarge">
+          {dayjs(session.created_on).format("h:mm A")}
+          {isSessionEnded
+            ? ` - ${dayjs(session.ended_on).format("h:mm A")}`
+            : ""}
+        </Text>
+        <Text variant="labelLarge">{duration}</Text>
+      </View>
+      <Divider />
       <FlatList
         data={workouts}
         ItemSeparatorComponent={() => <Divider style={{ marginVertical: 8 }} />}

@@ -1,5 +1,5 @@
 import { useAuthenticator } from "@aws-amplify/ui-react-native";
-import { Button, Text } from "react-native-paper";
+import { Button, FAB, Text } from "react-native-paper";
 import { useUserAttributes } from "@/hooks/useUserAttributes";
 import { useDarkMode } from "@/providers/DarkModeProvider";
 import { useRouter } from "expo-router";
@@ -7,15 +7,19 @@ import { AppView } from "@/components/AppView";
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { useGetSessions } from "@/api/routes/sessions/useGetSessions";
 import { usePostSessions } from "@/api/routes/sessions/usePostSessions";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function Index() {
   const authenticator = useAuthenticator();
-  const { userAttributes } = useUserAttributes();
+  const { userAttributes, userAttributesLoading } = useUserAttributes();
   const { toggleDarkMode } = useDarkMode();
+  const insets = useSafeAreaInsets();
   const router = useRouter();
 
-  const { data: activeSessions } = useGetSessions({ isActive: true });
-  const { data: pastSessions } = useGetSessions({ isActive: false });
+  const { data: activeSessions, isLoading: isActiveSessionsLoading } =
+    useGetSessions({ isActive: true });
+  const { data: pastSessions, isLoading: isPastSessionsLoading } =
+    useGetSessions({ isActive: false });
 
   const { mutate: createSession, isPending: isCreatingSession } =
     usePostSessions({
@@ -45,8 +49,17 @@ export default function Index() {
     });
   };
 
-  if (!userAttributes || !activeSessions || !pastSessions) {
+  if (
+    userAttributesLoading ||
+    isActiveSessionsLoading ||
+    isPastSessionsLoading
+  ) {
     return <LoadingScreen />;
+  }
+
+  // TODO: Handle error states
+  if (!userAttributes || !activeSessions || !pastSessions) {
+    return null;
   }
 
   return (
@@ -57,6 +70,17 @@ export default function Index() {
         gap: 24,
       }}
     >
+      <FAB
+        icon="theme-light-dark"
+        onPress={() => toggleDarkMode()}
+        style={{
+          position: "absolute",
+          right: insets.right,
+          top: insets.top,
+          margin: 16,
+        }}
+      />
+
       <Text variant="headlineLarge">Welcome {userAttributes?.given_name}!</Text>
       {activeSessions.length > 0 ? (
         <Button mode="contained" icon="play" onPress={() => resumeSession()}>
@@ -84,13 +108,6 @@ export default function Index() {
         </Button>
       ) : null}
 
-      <Button
-        onPress={() => toggleDarkMode()}
-        icon="theme-light-dark"
-        mode="elevated"
-      >
-        Toggle dark mode
-      </Button>
       <Button onPress={() => authenticator.signOut()} mode="elevated">
         Sign out
       </Button>
