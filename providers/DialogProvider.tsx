@@ -7,7 +7,6 @@ type DialogOptions = {
   actions: {
     label: string;
     callback: (() => void) | (() => Promise<void>);
-    isLoading?: boolean; // Internal use only
   }[];
 };
 
@@ -22,22 +21,39 @@ export const useDialog = () => {
 
 export const DialogProvider: React.FC<PropsWithChildren> = ({ children }) => {
   const [activeDialog, setActiveDialog] = useState<DialogOptions | null>(null);
+  const [loadingActionIndex, setLoadingActionIndex] = useState<number | null>(
+    null
+  );
 
   const createDialog = (options: DialogOptions) => {
+    setLoadingActionIndex(null);
     setActiveDialog(options);
   };
 
   const dismissDialog = () => {
     setActiveDialog(null);
+    setLoadingActionIndex(null);
   };
 
-  const setActionLoading = (index: number) => {
-    const newActions = [...activeDialog!.actions];
-    newActions[index] = {
-      ...newActions[index],
-      isLoading: true,
-    };
-    setActiveDialog({ ...activeDialog!, actions: newActions });
+  const pressAction = async (
+    action: DialogOptions["actions"][0],
+    index: number
+  ) => {
+    const result = action.callback();
+
+    if (result instanceof Promise) {
+      // If the callback result is a promise, show a loading indicator until it resolves
+      setLoadingActionIndex(index);
+      try {
+        await result;
+        dismissDialog();
+      } catch {
+        setLoadingActionIndex(null);
+      }
+    } else {
+      // If the callback is synchronous, dismiss the dialog immediately
+      dismissDialog();
+    }
   };
 
   return (
@@ -56,12 +72,9 @@ export const DialogProvider: React.FC<PropsWithChildren> = ({ children }) => {
             {activeDialog?.actions.map((action, index) => (
               <Button
                 key={index}
-                onPress={async () => {
-                  setActionLoading(index);
-                  await action.callback();
-                  dismissDialog();
-                }}
-                loading={action.isLoading}
+                onPress={() => pressAction(action, index)}
+                loading={loadingActionIndex === index}
+                disabled={loadingActionIndex !== null}
               >
                 {action.label}
               </Button>

@@ -97,6 +97,23 @@ export default function Index() {
     }
   };
 
+  const deleteSession = () => {
+    createDialog({
+      title: "Delete session",
+      content: "Are you sure you want to delete this session?",
+      actions: [
+        {
+          label: "Cancel",
+          callback: () => {},
+        },
+        {
+          label: "Delete",
+          callback: async () => await deleteSessionAsync(),
+        },
+      ],
+    });
+  };
+
   const addWorkout = () => {
     router.navigate({
       pathname: "/addWorkout",
@@ -172,8 +189,8 @@ export default function Index() {
         }
       />
       <FooterButtons
-        primaryLabel={isSessionEnded ? "" : "End session"}
-        primaryAction={endSession}
+        primaryLabel={isSessionEnded ? "Delete Session" : "End session"}
+        primaryAction={() => (isSessionEnded ? deleteSession() : endSession())}
         primaryIsLoading={isEndingSession}
         secondaryLabel="Go back"
         secondaryAction={router.back}
