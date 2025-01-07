@@ -12,9 +12,19 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.alecskinner.flex-charts"
     },
-    "plugins": ["expo-router"],
+    "plugins": [
+      "expo-router"
+    ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "78383f9a-1215-4fc4-a905-6d7c89c60292"
+      }
     }
   }
 }
