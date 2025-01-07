@@ -8,6 +8,7 @@ import { LoadingScreen } from "@/components/LoadingScreen";
 import { useGetSessions } from "@/api/routes/sessions/useGetSessions";
 import { usePostSessions } from "@/api/routes/sessions/usePostSessions";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { CriticalError } from "@/components/CriticalError";
 
 export default function Index() {
   const authenticator = useAuthenticator();
@@ -57,9 +58,8 @@ export default function Index() {
     return <LoadingScreen />;
   }
 
-  // TODO: Handle error states
   if (!userAttributes || !activeSessions || !pastSessions) {
-    return null;
+    return <CriticalError />;
   }
 
   return (

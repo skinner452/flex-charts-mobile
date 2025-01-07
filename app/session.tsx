@@ -4,6 +4,7 @@ import { usePostSessionsIdEnd } from "@/api/routes/sessions/usePostSessionsIdEnd
 import { useDeleteWorkoutsId } from "@/api/routes/workouts/useDeleteWorkoutsId";
 import { useGetWorkouts } from "@/api/routes/workouts/useGetWorkouts";
 import { AppView } from "@/components/AppView";
+import { CriticalError } from "@/components/CriticalError";
 import { FooterButtons } from "@/components/FooterButtons";
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { useDuration } from "@/hooks/useDuration";
@@ -107,9 +108,8 @@ export default function Index() {
     return <LoadingScreen />;
   }
 
-  // TODO: Handle error states
   if (!session || !workouts) {
-    return null;
+    return <CriticalError />;
   }
 
   const isSessionEnded = session.ended_on !== null;

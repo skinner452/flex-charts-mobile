@@ -2,6 +2,7 @@ import { useGetExercises } from "@/api/routes/exercises/useGetExercises";
 import { useGetExercisesIdStats } from "@/api/routes/exercises/useGetExercisesIdStats";
 import { usePostWorkouts } from "@/api/routes/workouts/usePostWorkouts";
 import { AppView } from "@/components/AppView";
+import { CriticalError } from "@/components/CriticalError";
 import { ExerciseStatItemDisplay } from "@/components/ExerciseStatItem";
 import { FooterButtons } from "@/components/FooterButtons";
 import { FormItem } from "@/components/FormItem";
@@ -75,9 +76,8 @@ export default function Index() {
     return <LoadingScreen />;
   }
 
-  // TODO: Handle error states
   if (!exercises) {
-    return null;
+    return <CriticalError />;
   }
 
   return (
