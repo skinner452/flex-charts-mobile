@@ -1,6 +1,6 @@
 export const pluralize = (singular: string, count: number, plural?: string) => {
   if (count === 1) {
-    return `${count} singular`;
+    return `${count} ${singular}`;
   }
 
   if (plural) {
