@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "flex-charts-mobile",
-    "slug": "flex-charts-mobile",
+    "name": "flex-charts",
+    "slug": "flex-charts",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -9,7 +9,8 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.alecskinner.flex-charts"
     },
     "plugins": ["expo-router"],
     "experiments": {

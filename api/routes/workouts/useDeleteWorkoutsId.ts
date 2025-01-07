@@ -22,9 +22,8 @@ export const useDeleteWorkoutsId = (
         endpoint: getEndpoint(workout.id),
       }),
     onSuccess: (response, workout, ...rest) => {
-      // Invalidate the workouts query for the session
       queryClient.invalidateQueries({
-        queryKey: useGetWorkoutsQueryKey({ sessionID: workout.sessionID }),
+        queryKey: useGetWorkoutsQueryKey(),
       });
 
       options?.onSuccess?.(response, workout, ...rest);

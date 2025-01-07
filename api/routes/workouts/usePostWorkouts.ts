@@ -7,8 +7,6 @@ import {
 } from "@tanstack/react-query";
 import { useGetWorkoutsQueryKey } from "./useGetWorkouts";
 
-const endpoint = "workouts";
-
 export const usePostWorkouts = (
   options?: Partial<UseMutationOptions<Workout, Error, WorkoutCreate>>
 ) => {
@@ -19,7 +17,7 @@ export const usePostWorkouts = (
     mutationFn: (data?: WorkoutCreate) =>
       fetchFromAPI<Workout>({
         method: "POST",
-        endpoint: endpoint,
+        endpoint: "workouts",
         data,
       }),
     onSuccess: (workout, ...rest) => {

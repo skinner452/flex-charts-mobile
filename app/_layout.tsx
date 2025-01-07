@@ -1,11 +1,6 @@
 import { Authenticator } from "@aws-amplify/ui-react-native";
 import { Stack } from "expo-router";
-import {
-  PaperProvider,
-  MD3LightTheme,
-  MD3DarkTheme,
-  Portal,
-} from "react-native-paper";
+import { PaperProvider, MD3LightTheme, MD3DarkTheme } from "react-native-paper";
 import { DarkModeProvider, useDarkMode } from "@/providers/DarkModeProvider";
 
 // Import the Amplify configuration

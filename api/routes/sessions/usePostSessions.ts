@@ -7,8 +7,6 @@ import {
 } from "@tanstack/react-query";
 import { useGetSessionsQueryKey } from "./useGetSessions";
 
-const endpoint = "sessions";
-
 export const usePostSessions = (
   options?: Partial<UseMutationOptions<Session, Error>>
 ) => {
@@ -19,12 +17,11 @@ export const usePostSessions = (
     mutationFn: () =>
       fetchFromAPI<Session>({
         method: "POST",
-        endpoint: endpoint,
+        endpoint: "sessions",
       }),
     onSuccess: (session, ...rest) => {
-      // Invalidate the active sessions query
       queryClient.invalidateQueries({
-        queryKey: useGetSessionsQueryKey({ isActive: true }),
+        queryKey: useGetSessionsQueryKey(),
       });
 
       options?.onSuccess?.(session, ...rest);

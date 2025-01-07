@@ -4,7 +4,7 @@ import { FooterButtons } from "@/components/FooterButtons";
 import { Session } from "@/types/sessions";
 import dayjs from "dayjs";
 import { useRouter } from "expo-router";
-import { FlatList, Pressable, TouchableHighlight, View } from "react-native";
+import { FlatList, View } from "react-native";
 import { Divider, Text, TouchableRipple } from "react-native-paper";
 
 export default function Index() {

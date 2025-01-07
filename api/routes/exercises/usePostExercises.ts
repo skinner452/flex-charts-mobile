@@ -7,8 +7,6 @@ import {
 } from "@tanstack/react-query";
 import { useGetExercisesQueryKey } from "./useGetExercises";
 
-const endpoint = "exercises";
-
 export const usePostExercises = (
   options?: Partial<UseMutationOptions<Exercise, Error, ExerciseCreate>>
 ) => {
@@ -19,11 +17,10 @@ export const usePostExercises = (
     mutationFn: (data?: ExerciseCreate) =>
       fetchFromAPI<Exercise>({
         method: "POST",
-        endpoint: endpoint,
+        endpoint: "exercises",
         data,
       }),
     onSuccess: (exercise, ...rest) => {
-      // Invalidate the exercises query
       queryClient.invalidateQueries({
         queryKey: useGetExercisesQueryKey(),
       });

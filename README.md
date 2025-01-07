@@ -4,14 +4,12 @@ This is an [Expo](https://expo.dev) project created with [`create-expo-app`](htt
 
 ## Get started
 
-1. Install dependencies
+1. Install dependencies: `npm install`
 
-   ```bash
-   npm install
-   ```
+2. Copy the example env and fill with your variables: `cp .env.example .env`
 
-2. Start the app
+3. Start the app: `npm start`
 
-   ```bash
-    npx expo start
-   ```
+4. Build: `eas build`
+
+5. Submit: `eas submit`

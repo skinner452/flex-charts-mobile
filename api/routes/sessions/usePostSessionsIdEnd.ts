@@ -5,7 +5,7 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { useGetSessionsQueryKey } from "./useGetSessions";
-import { useGetSessionsIdQueryKey } from "./useGetSessionsId";
+import { useGetExercisesIdStatsQueryKey } from "../exercises/useGetExercisesIdStats";
 
 const getEndpoint = (id: number) => `sessions/${id}/end`;
 
@@ -23,12 +23,12 @@ export const usePostSessionsIdEnd = (
         endpoint: getEndpoint(id),
       }),
     onSuccess: (...rest) => {
-      // Invalidate the sessions query and the session ID query
       queryClient.invalidateQueries({
         queryKey: useGetSessionsQueryKey(),
       });
+
       queryClient.invalidateQueries({
-        queryKey: useGetSessionsIdQueryKey(id),
+        queryKey: useGetExercisesIdStatsQueryKey(),
       });
 
       options?.onSuccess?.(...rest);

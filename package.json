@@ -1,15 +1,15 @@
 {
-  "name": "flex-charts-mobile",
+  "name": "flex-charts",
   "main": "expo-router/entry",
   "version": "1.0.0",
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
+    "ios-device": "expo run:ios --device --configuration Release",
     "test": "jest --watchAll",
     "lint": "expo lint",
-    "copy-types": "rm -rf ./types && cp -r ../flex-charts-api/types ./types",
-    "ios-release": "expo run:ios --configuration Release"
+    "copy-types": "rm -rf ./types && cp -r ../flex-charts-api/types ./types"
   },
   "jest": {
     "preset": "jest-expo"

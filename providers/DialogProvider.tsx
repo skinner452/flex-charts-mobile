@@ -1,10 +1,4 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import React, {
-  createContext,
-  PropsWithChildren,
-  useEffect,
-  useState,
-} from "react";
+import React, { createContext, PropsWithChildren, useState } from "react";
 import { Button, Dialog, Portal, Text } from "react-native-paper";
 
 type DialogOptions = {
@@ -18,7 +12,7 @@ type DialogOptions = {
 };
 
 const DialogContext = createContext({
-  createDialog: (options: DialogOptions) => {},
+  createDialog: (_options: DialogOptions) => {},
 });
 
 export const useDialog = () => {
