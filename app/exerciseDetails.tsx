@@ -1,5 +1,4 @@
 import { useDeleteExercisesId } from "@/api/routes/exercises/useDeleteExercisesId";
-import { useGetExercises } from "@/api/routes/exercises/useGetExercises";
 import { useGetExercisesId } from "@/api/routes/exercises/useGetExercisesId";
 import { useGetExercisesIdStats } from "@/api/routes/exercises/useGetExercisesIdStats";
 import { useGetWorkouts } from "@/api/routes/workouts/useGetWorkouts";
@@ -9,11 +8,10 @@ import { ExerciseStatsComponent } from "@/components/ExerciseStats";
 import { FooterButtons } from "@/components/FooterButtons";
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { useDialog } from "@/providers/DialogProvider";
-import { parse } from "@babel/core";
 import dayjs from "dayjs";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { FlatList, View } from "react-native";
-import { Divider, Text, TouchableRipple } from "react-native-paper";
+import { Divider, Text } from "react-native-paper";
 
 export default function Index() {
   const router = useRouter();
