@@ -87,7 +87,7 @@ export default function Index() {
         }}
       />
 
-      <Text variant="headlineLarge">Welcome {userAttributes?.given_name}!</Text>
+      <Text variant="headlineLarge">Welcome {userAttributes.given_name}!</Text>
       {activeSessions.length > 0 ? (
         <Button mode="contained" icon="play" onPress={() => resumeSession()}>
           Resume session

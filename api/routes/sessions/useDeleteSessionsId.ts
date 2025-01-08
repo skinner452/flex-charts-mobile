@@ -6,8 +6,6 @@ import {
 } from "@tanstack/react-query";
 import { useGetSessionsQueryKey } from "./useGetSessions";
 
-const getEndpoint = (id: number) => `sessions/${id}`;
-
 export const useDeleteSessionsId = (
   id: number,
   options?: Partial<UseMutationOptions>
@@ -19,7 +17,7 @@ export const useDeleteSessionsId = (
     mutationFn: () =>
       fetchFromAPI({
         method: "DELETE",
-        endpoint: getEndpoint(id),
+        endpoint: `sessions/${id}`,
       }),
     onSuccess: (...rest) => {
       queryClient.invalidateQueries({

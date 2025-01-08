@@ -3,7 +3,7 @@ import { useGetExercisesIdStats } from "@/api/routes/exercises/useGetExercisesId
 import { usePostWorkouts } from "@/api/routes/workouts/usePostWorkouts";
 import { AppView } from "@/components/AppView";
 import { CriticalError } from "@/components/CriticalError";
-import { ExerciseStatItemDisplay } from "@/components/ExerciseStatItem";
+import { ExerciseStatsComponent } from "@/components/ExerciseStats";
 import { FooterButtons } from "@/components/FooterButtons";
 import { FormItem } from "@/components/FormItem";
 import { LoadingScreen } from "@/components/LoadingScreen";
@@ -101,21 +101,8 @@ export default function Index() {
               Add new exercise
             </Button>
 
-            {exerciseStats?.best || exerciseStats?.last ? (
-              <View style={{ flexDirection: "row", gap: 16 }}>
-                {exerciseStats.best ? (
-                  <ExerciseStatItemDisplay
-                    item={exerciseStats.best}
-                    label="Best"
-                  />
-                ) : null}
-                {exerciseStats.last ? (
-                  <ExerciseStatItemDisplay
-                    item={exerciseStats.last}
-                    label="Last"
-                  />
-                ) : null}
-              </View>
+            {exerciseStats ? (
+              <ExerciseStatsComponent stats={exerciseStats} />
             ) : null}
           </FormItem>
 

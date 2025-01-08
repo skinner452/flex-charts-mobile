@@ -21,9 +21,8 @@ export const usePostWorkouts = (
         data,
       }),
     onSuccess: (workout, ...rest) => {
-      // Invalidate the session's workouts query
       queryClient.invalidateQueries({
-        queryKey: useGetWorkoutsQueryKey({ sessionID: workout.sessionID }),
+        queryKey: useGetWorkoutsQueryKey(),
       });
 
       options?.onSuccess?.(workout, ...rest);

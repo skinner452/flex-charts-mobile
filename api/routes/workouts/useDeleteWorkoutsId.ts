@@ -7,8 +7,6 @@ import {
 import { useGetWorkoutsQueryKey } from "./useGetWorkouts";
 import { Workout } from "@/types/workouts";
 
-const getEndpoint = (id: number) => `workouts/${id}`;
-
 export const useDeleteWorkoutsId = (
   options?: Partial<UseMutationOptions<void, Error, Workout>>
 ) => {
@@ -19,7 +17,7 @@ export const useDeleteWorkoutsId = (
     mutationFn: (workout) =>
       fetchFromAPI({
         method: "DELETE",
-        endpoint: getEndpoint(workout.id),
+        endpoint: `workouts/${workout.id}`,
       }),
     onSuccess: (response, workout, ...rest) => {
       queryClient.invalidateQueries({

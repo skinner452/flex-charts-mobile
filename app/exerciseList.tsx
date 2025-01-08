@@ -20,7 +20,14 @@ export default function Index() {
         data={exercises}
         ItemSeparatorComponent={() => <Divider />}
         renderItem={({ item: exercise }) => (
-          <TouchableRipple>
+          <TouchableRipple
+            onPress={() =>
+              router.push({
+                pathname: `/exerciseDetails`,
+                params: { exerciseID: exercise.id.toString() },
+              })
+            }
+          >
             <View
               style={{
                 flexDirection: "row",

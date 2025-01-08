@@ -20,4 +20,6 @@ export type WorkoutCreate = {
 
 export type WorkoutFilters = {
   sessionID?: number;
+  exerciseID?: number;
+  sort?: string;
 };
