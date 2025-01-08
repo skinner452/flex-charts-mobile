@@ -1,4 +1,4 @@
-import { Text } from "react-native-paper";
+import { ActivityIndicator, Text } from "react-native-paper";
 import { AppView } from "./AppView";
 
 export const LoadingScreen = () => {
@@ -9,7 +9,7 @@ export const LoadingScreen = () => {
         alignItems: "center",
       }}
     >
-      <Text variant="displayLarge">Loading...</Text>
+      <ActivityIndicator size="large" />
     </AppView>
   );
 };
