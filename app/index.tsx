@@ -26,7 +26,7 @@ export default function Index() {
     usePostSessions({
       onSuccess: (session) => {
         router.push({
-          pathname: `/session`,
+          pathname: `/sessionDetails`,
           params: { sessionID: session.id.toString() },
         });
       },
@@ -39,7 +39,7 @@ export default function Index() {
     if (!activeSessions || activeSessions.length === 0) return;
 
     router.push({
-      pathname: `/session`,
+      pathname: `/sessionDetails`,
       params: { sessionID: activeSessions[0].id.toString() },
     });
   };
@@ -47,6 +47,12 @@ export default function Index() {
   const openSessionHistory = async () => {
     router.push({
       pathname: `/sessionHistory`,
+    });
+  };
+
+  const openExerciseList = async () => {
+    router.push({
+      pathname: `/exerciseList`,
     });
   };
 
@@ -108,7 +114,19 @@ export default function Index() {
         </Button>
       ) : null}
 
-      <Button onPress={() => authenticator.signOut()} mode="elevated">
+      <Button
+        mode="elevated"
+        icon="weight-lifter"
+        onPress={() => openExerciseList()}
+      >
+        Exercises
+      </Button>
+
+      <Button
+        icon="logout"
+        onPress={() => authenticator.signOut()}
+        mode="elevated"
+      >
         Sign out
       </Button>
     </AppView>

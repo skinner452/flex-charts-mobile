@@ -22,7 +22,7 @@ export default function Index() {
 
   const openSession = (session: Session) => {
     router.navigate({
-      pathname: "/session",
+      pathname: "/sessionDetails",
       params: { sessionID: session.id.toString() },
     });
   };
