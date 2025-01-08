@@ -10,11 +10,19 @@ import { LoadingScreen } from "@/components/LoadingScreen";
 import { useDialog } from "@/providers/DialogProvider";
 import dayjs from "dayjs";
 import { useLocalSearchParams, useRouter } from "expo-router";
+import { useMemo, useState } from "react";
 import { FlatList, View } from "react-native";
-import { Divider, Text } from "react-native-paper";
+import {
+  CurveType,
+  LineChart,
+  lineDataItem,
+  ruleTypes,
+} from "react-native-gifted-charts";
+import { Divider, Text, useTheme } from "react-native-paper";
 
 export default function Index() {
   const router = useRouter();
+  const theme = useTheme();
   const { createDialog } = useDialog();
 
   const { exerciseID } = useLocalSearchParams<{
@@ -32,6 +40,19 @@ export default function Index() {
     exerciseID: parseInt(exerciseID),
     sort: "-created_on",
   });
+
+  const [chartWidth, setChartWidth] = useState(0);
+
+  const weightGraphData = useMemo(() => {
+    if (!workouts) return [];
+
+    // Reverse the array so that the oldest workout is leftmost
+    return workouts.toReversed().map((workout) => {
+      return {
+        value: workout.weight,
+      } as lineDataItem;
+    });
+  }, [workouts]);
 
   const { mutateAsync: deleteExerciseAsync, isPending: isExerciseDeleting } =
     useDeleteExercisesId(parseInt(exerciseID), {
@@ -78,6 +99,32 @@ export default function Index() {
       </Text>
 
       {exerciseStats ? <ExerciseStatsComponent stats={exerciseStats} /> : null}
+
+      <View onLayout={(e) => setChartWidth(e.nativeEvent.layout.width)}>
+        {weightGraphData.length > 1 && chartWidth > 0 ? (
+          <LineChart
+            data={weightGraphData}
+            width={chartWidth - 60} // Subtract padding
+            height={150}
+            noOfSections={5}
+            thickness={5}
+            roundToDigits={0}
+            hideRules
+            hideDataPoints
+            curved
+            curveType={CurveType.QUADRATIC}
+            backgroundColor={theme.colors.backdrop}
+            color={theme.colors.primary}
+            yAxisColor={theme.colors.primary}
+            xAxisColor={theme.colors.primary}
+            yAxisTextStyle={{
+              color: theme.colors.primary,
+            }}
+            isAnimated={true}
+            scrollToEnd
+          />
+        ) : null}
+      </View>
 
       <FlatList
         style={{ flex: 1 }}
