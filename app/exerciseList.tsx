@@ -10,6 +10,10 @@ export default function Index() {
 
   const { data: exercises } = useGetExercises();
 
+  const createExercise = () => {
+    router.push({ pathname: "/addExercise" });
+  };
+
   return (
     <AppView>
       <Text variant="headlineLarge" style={{ textAlign: "center" }}>
@@ -42,7 +46,12 @@ export default function Index() {
         )}
       />
 
-      <FooterButtons secondaryLabel="Go back" secondaryAction={router.back} />
+      <FooterButtons
+        primaryLabel="Create exercise"
+        primaryAction={() => createExercise()}
+        secondaryLabel="Go back"
+        secondaryAction={router.back}
+      />
     </AppView>
   );
 }

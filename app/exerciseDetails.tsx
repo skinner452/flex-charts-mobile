@@ -12,12 +12,7 @@ import dayjs from "dayjs";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useMemo, useState } from "react";
 import { FlatList, View } from "react-native";
-import {
-  CurveType,
-  LineChart,
-  lineDataItem,
-  ruleTypes,
-} from "react-native-gifted-charts";
+import { CurveType, LineChart, lineDataItem } from "react-native-gifted-charts";
 import { Divider, Text, useTheme } from "react-native-paper";
 
 export default function Index() {

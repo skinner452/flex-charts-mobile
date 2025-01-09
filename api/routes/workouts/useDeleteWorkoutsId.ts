@@ -6,6 +6,7 @@ import {
 } from "@tanstack/react-query";
 import { useGetWorkoutsQueryKey } from "./useGetWorkouts";
 import { Workout } from "@/types/workouts";
+import { useGetExercisesIdStatsQueryKey } from "../exercises/useGetExercisesIdStats";
 
 export const useDeleteWorkoutsId = (
   options?: Partial<UseMutationOptions<void, Error, Workout>>
@@ -22,6 +23,9 @@ export const useDeleteWorkoutsId = (
     onSuccess: (response, workout, ...rest) => {
       queryClient.invalidateQueries({
         queryKey: useGetWorkoutsQueryKey(),
+      });
+      queryClient.invalidateQueries({
+        queryKey: useGetExercisesIdStatsQueryKey(),
       });
 
       options?.onSuccess?.(response, workout, ...rest);

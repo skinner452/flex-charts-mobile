@@ -31,7 +31,7 @@ export default function Index() {
     { enabled: !!exerciseId }
   );
 
-  const { mutate: createWorkout, isPending: isCreatingWorkout } =
+  const { mutateAsync: createWorkoutAsync, isPending: isCreatingWorkout } =
     usePostWorkouts({
       onSuccess: () => {
         router.back();
@@ -62,8 +62,8 @@ export default function Index() {
     router.push("/addExercise");
   };
 
-  const createWorkoutWithData = () => {
-    createWorkout({
+  const createWorkout = async () => {
+    await createWorkoutAsync({
       sessionID: parseInt(sessionID),
       exerciseID: parseInt(exerciseId),
       weight: parseFloat(weight),
@@ -133,7 +133,7 @@ export default function Index() {
       </ScrollView>
       <FooterButtons
         primaryLabel="Add"
-        primaryAction={() => createWorkoutWithData()}
+        primaryAction={() => createWorkout()}
         primaryIsLoading={isCreatingWorkout}
         secondaryLabel="Go back"
         secondaryAction={router.back}

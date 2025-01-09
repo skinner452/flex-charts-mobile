@@ -6,6 +6,7 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { useGetWorkoutsQueryKey } from "./useGetWorkouts";
+import { useGetExercisesIdStatsQueryKey } from "../exercises/useGetExercisesIdStats";
 
 export const usePostWorkouts = (
   options?: Partial<UseMutationOptions<Workout, Error, WorkoutCreate>>
@@ -23,6 +24,9 @@ export const usePostWorkouts = (
     onSuccess: (workout, ...rest) => {
       queryClient.invalidateQueries({
         queryKey: useGetWorkoutsQueryKey(),
+      });
+      queryClient.invalidateQueries({
+        queryKey: useGetExercisesIdStatsQueryKey(),
       });
 
       options?.onSuccess?.(workout, ...rest);

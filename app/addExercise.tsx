@@ -2,7 +2,7 @@ import { usePostExercises } from "@/api/routes/exercises/usePostExercises";
 import { AppView } from "@/components/AppView";
 import { FooterButtons } from "@/components/FooterButtons";
 import { FormItem } from "@/components/FormItem";
-import { useRouter } from "expo-router";
+import { useNavigation, useRouter } from "expo-router";
 import { useState } from "react";
 import { ScrollView, View } from "react-native";
 import { Text, TextInput } from "react-native-paper";
@@ -12,7 +12,7 @@ export default function Index() {
 
   const [name, setName] = useState("");
 
-  const { mutate: createExercise, isPending: isCreatingExercise } =
+  const { mutateAsync: createExerciseAsync, isPending: isCreatingExercise } =
     usePostExercises({
       onError: (error) => {
         console.error(error);
@@ -23,8 +23,8 @@ export default function Index() {
       },
     });
 
-  const createExerciseWithData = () => {
-    createExercise({
+  const createExercise = async () => {
+    await createExerciseAsync({
       name,
     });
   };
@@ -43,7 +43,7 @@ export default function Index() {
       </ScrollView>
       <FooterButtons
         primaryLabel="Create"
-        primaryAction={() => createExerciseWithData()}
+        primaryAction={() => createExercise()}
         primaryIsLoading={isCreatingExercise}
         secondaryLabel="Go back"
         secondaryAction={router.back}

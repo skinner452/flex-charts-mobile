@@ -5,6 +5,8 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { useGetSessionsQueryKey } from "./useGetSessions";
+import { useGetWorkoutsQueryKey } from "../workouts/useGetWorkouts";
+import { useGetExercisesIdStatsQueryKey } from "../exercises/useGetExercisesIdStats";
 
 export const useDeleteSessionsId = (
   id: number,
@@ -22,6 +24,12 @@ export const useDeleteSessionsId = (
     onSuccess: (...rest) => {
       queryClient.invalidateQueries({
         queryKey: useGetSessionsQueryKey(),
+      });
+      queryClient.invalidateQueries({
+        queryKey: useGetWorkoutsQueryKey(),
+      });
+      queryClient.invalidateQueries({
+        queryKey: useGetExercisesIdStatsQueryKey(),
       });
 
       options?.onSuccess?.(...rest);
