@@ -29,6 +29,7 @@ export default function RootLayout() {
   return (
     <Authenticator.Provider>
       <Authenticator
+        signUpAttributes={["given_name", "family_name"]}
         services={{
           handleSignIn: async (input) => {
             // Workaround for a crash when using the default auth flow
