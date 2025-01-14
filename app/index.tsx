@@ -9,6 +9,7 @@ import { useGetSessions } from "@/api/routes/sessions/useGetSessions";
 import { usePostSessions } from "@/api/routes/sessions/usePostSessions";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { CriticalError } from "@/components/CriticalError";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function Index() {
   const authenticator = useAuthenticator();
@@ -16,6 +17,7 @@ export default function Index() {
   const { toggleDarkMode } = useDarkMode();
   const insets = useSafeAreaInsets();
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   const { data: activeSessions, isLoading: isActiveSessionsLoading } =
     useGetSessions({ isActive: true });
@@ -54,6 +56,14 @@ export default function Index() {
     router.push({
       pathname: `/exerciseList`,
     });
+  };
+
+  const signOut = async () => {
+    await authenticator.signOut();
+
+    // Clear the query cache after signing out
+    // Adding this delay prevents the queries from being refetched automatically
+    setTimeout(() => queryClient.clear(), 1000);
   };
 
   if (
@@ -122,11 +132,7 @@ export default function Index() {
         Exercises
       </Button>
 
-      <Button
-        icon="logout"
-        onPress={() => authenticator.signOut()}
-        mode="elevated"
-      >
+      <Button icon="logout" onPress={() => signOut()} mode="elevated">
         Sign out
       </Button>
     </AppView>
