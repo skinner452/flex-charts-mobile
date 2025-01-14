@@ -2,7 +2,7 @@ import { usePostExercises } from "@/api/routes/exercises/usePostExercises";
 import { AppView } from "@/components/AppView";
 import { FooterButtons } from "@/components/FooterButtons";
 import { FormItem } from "@/components/FormItem";
-import { useNavigation, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import { useState } from "react";
 import { ScrollView, View } from "react-native";
 import { Text, TextInput } from "react-native-paper";
@@ -14,9 +14,6 @@ export default function Index() {
 
   const { mutateAsync: createExerciseAsync, isPending: isCreatingExercise } =
     usePostExercises({
-      onError: (error) => {
-        console.error(error);
-      },
       onSuccess: (newExercise) => {
         router.back();
         router.setParams({ newExerciseID: newExercise.id });

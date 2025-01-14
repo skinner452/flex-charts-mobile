@@ -1,7 +1,7 @@
-import { defaultQueryOptions } from "@/api/base/defaultQueryOptions";
 import { fetchFromAPI } from "@/api/base/fetchFromAPI";
+import { useBaseQuery } from "@/api/base/useBaseQuery";
 import { Session } from "@/types/sessions";
-import { useQuery, UseQueryOptions } from "@tanstack/react-query";
+import { UseQueryOptions } from "@tanstack/react-query";
 
 export const useGetSessionsIdQueryKey = (id: number) => {
   const queryKey = ["sessions", "id"] as any[];
@@ -13,8 +13,7 @@ export const useGetSessionsId = (
   id: number,
   options?: Partial<UseQueryOptions<Session>>
 ) => {
-  return useQuery({
-    ...defaultQueryOptions,
+  return useBaseQuery({
     ...options,
     queryFn: () =>
       fetchFromAPI<Session>({ method: "GET", endpoint: `sessions/${id}` }),

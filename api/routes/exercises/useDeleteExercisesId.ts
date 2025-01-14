@@ -6,6 +6,7 @@ import {
 } from "@tanstack/react-query";
 import { useGetExercisesQueryKey } from "./useGetExercises";
 import { useGetWorkoutsQueryKey } from "../workouts/useGetWorkouts";
+import { useBaseMutation } from "@/api/base/useBaseMutation";
 
 export const useDeleteExercisesId = (
   id: number,
@@ -13,7 +14,7 @@ export const useDeleteExercisesId = (
 ) => {
   const queryClient = useQueryClient();
 
-  return useMutation({
+  return useBaseMutation({
     ...options,
     mutationFn: () =>
       fetchFromAPI({

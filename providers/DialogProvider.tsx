@@ -6,7 +6,7 @@ type DialogOptions = {
   content: string;
   actions: {
     label: string;
-    callback: (() => void) | (() => Promise<void>);
+    callback?: (() => void) | (() => Promise<void>);
   }[];
 };
 
@@ -39,7 +39,7 @@ export const DialogProvider: React.FC<PropsWithChildren> = ({ children }) => {
     action: DialogOptions["actions"][0],
     index: number
   ) => {
-    const result = action.callback();
+    const result = action.callback?.();
 
     if (result instanceof Promise) {
       // If the callback result is a promise, show a loading indicator until it resolves

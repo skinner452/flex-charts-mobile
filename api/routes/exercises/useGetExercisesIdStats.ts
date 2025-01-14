@@ -1,7 +1,7 @@
-import { defaultQueryOptions } from "@/api/base/defaultQueryOptions";
 import { fetchFromAPI } from "@/api/base/fetchFromAPI";
+import { useBaseQuery } from "@/api/base/useBaseQuery";
 import { ExerciseStats } from "@/types/exercises";
-import { useQuery, UseQueryOptions } from "@tanstack/react-query";
+import { UseQueryOptions } from "@tanstack/react-query";
 
 export const useGetExercisesIdStatsQueryKey = (id?: number) => {
   const queryKey = ["exercises", "id", "stats"] as any[];
@@ -13,8 +13,7 @@ export const useGetExercisesIdStats = (
   id: number,
   options?: Partial<UseQueryOptions<ExerciseStats>>
 ) => {
-  return useQuery({
-    ...defaultQueryOptions,
+  return useBaseQuery({
     ...options,
     queryFn: () =>
       fetchFromAPI<ExerciseStats>({

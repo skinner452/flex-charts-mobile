@@ -1,18 +1,15 @@
 import { fetchFromAPI } from "@/api/base/fetchFromAPI";
 import { Session } from "@/types/sessions";
-import {
-  useMutation,
-  UseMutationOptions,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { UseMutationOptions, useQueryClient } from "@tanstack/react-query";
 import { useGetSessionsQueryKey } from "./useGetSessions";
+import { useBaseMutation } from "@/api/base/useBaseMutation";
 
 export const usePostSessions = (
   options?: Partial<UseMutationOptions<Session, Error>>
 ) => {
   const queryClient = useQueryClient();
 
-  return useMutation({
+  return useBaseMutation({
     ...options,
     mutationFn: () =>
       fetchFromAPI<Session>({

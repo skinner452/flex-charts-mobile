@@ -1,7 +1,7 @@
 import { fetchAuthSession } from "aws-amplify/auth";
 import { isFieldError } from "./errors";
 
-type FetchOptions = {
+export type FetchOptions = {
   method: HTTPMethod;
   endpoint: string;
   data?: DataValues;
@@ -45,7 +45,7 @@ export const fetchFromAPI = async <ResponseData>({
     if (e?.message === "JSON Parse error: Unexpected end of input") {
       // No response body, ok
     } else {
-      console.error(e);
+      throw new Error("Failed to parse response");
     }
   }
 

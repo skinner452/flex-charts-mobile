@@ -1,7 +1,7 @@
-import { defaultQueryOptions } from "@/api/base/defaultQueryOptions";
 import { fetchFromAPI } from "@/api/base/fetchFromAPI";
+import { useBaseQuery } from "@/api/base/useBaseQuery";
 import { Workout, WorkoutFilters } from "@/types/workouts";
-import { useQuery, UseQueryOptions } from "@tanstack/react-query";
+import { UseQueryOptions } from "@tanstack/react-query";
 
 export const useGetWorkoutsQueryKey = (filters?: WorkoutFilters) => {
   const queryKey = ["workouts"] as any[];
@@ -13,8 +13,7 @@ export const useGetWorkouts = (
   filters?: WorkoutFilters,
   options?: Partial<UseQueryOptions<Workout[]>>
 ) => {
-  return useQuery({
-    ...defaultQueryOptions,
+  return useBaseQuery({
     ...options,
     queryFn: () =>
       fetchFromAPI<Workout[]>({

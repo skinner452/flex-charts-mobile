@@ -1,18 +1,15 @@
 import { fetchFromAPI } from "@/api/base/fetchFromAPI";
 import { Exercise, ExerciseCreate } from "@/types/exercises";
-import {
-  useMutation,
-  UseMutationOptions,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { UseMutationOptions, useQueryClient } from "@tanstack/react-query";
 import { useGetExercisesQueryKey } from "./useGetExercises";
+import { useBaseMutation } from "@/api/base/useBaseMutation";
 
 export const usePostExercises = (
   options?: Partial<UseMutationOptions<Exercise, Error, ExerciseCreate>>
 ) => {
   const queryClient = useQueryClient();
 
-  return useMutation({
+  return useBaseMutation({
     ...options,
     mutationFn: (data?: ExerciseCreate) =>
       fetchFromAPI<Exercise>({

@@ -74,7 +74,6 @@ export default function Index() {
       actions: [
         {
           label: "Cancel",
-          callback: () => {},
         },
         {
           label: "Delete",

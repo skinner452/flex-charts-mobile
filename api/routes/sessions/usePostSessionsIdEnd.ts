@@ -1,11 +1,8 @@
 import { fetchFromAPI } from "@/api/base/fetchFromAPI";
-import {
-  useMutation,
-  UseMutationOptions,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { UseMutationOptions, useQueryClient } from "@tanstack/react-query";
 import { useGetSessionsQueryKey } from "./useGetSessions";
 import { useGetExercisesIdStatsQueryKey } from "../exercises/useGetExercisesIdStats";
+import { useBaseMutation } from "@/api/base/useBaseMutation";
 
 export const usePostSessionsIdEnd = (
   id: number,
@@ -13,7 +10,7 @@ export const usePostSessionsIdEnd = (
 ) => {
   const queryClient = useQueryClient();
 
-  return useMutation({
+  return useBaseMutation({
     ...options,
     mutationFn: () =>
       fetchFromAPI({

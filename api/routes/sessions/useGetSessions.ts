@@ -1,7 +1,7 @@
-import { defaultQueryOptions } from "@/api/base/defaultQueryOptions";
 import { fetchFromAPI } from "@/api/base/fetchFromAPI";
+import { useBaseQuery } from "@/api/base/useBaseQuery";
 import { Session, SessionFilters } from "@/types/sessions";
-import { useQuery, UseQueryOptions } from "@tanstack/react-query";
+import { UseQueryOptions } from "@tanstack/react-query";
 
 export const useGetSessionsQueryKey = (filters?: SessionFilters) => {
   const queryKey = ["sessions"] as any[];
@@ -13,8 +13,7 @@ export const useGetSessions = (
   filters?: SessionFilters,
   options?: Partial<UseQueryOptions<Session[]>>
 ) => {
-  return useQuery({
-    ...defaultQueryOptions,
+  return useBaseQuery({
     ...options,
     queryFn: () =>
       fetchFromAPI<Session[]>({
