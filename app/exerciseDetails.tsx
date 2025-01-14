@@ -49,6 +49,13 @@ export default function Index() {
     });
   }, [workouts]);
 
+  const weightGraphStartY = useMemo(() => {
+    if (weightGraphData.length === 0) return 0;
+    const values = weightGraphData.map((item) => item.value ?? 0);
+    const minValue = Math.min(...values);
+    return minValue >= 20 ? minValue - 10 : 0;
+  }, [weightGraphData]);
+
   const { mutateAsync: deleteExerciseAsync, isPending: isExerciseDeleting } =
     useDeleteExercisesId(parseInt(exerciseID), {
       onSuccess: () => {
@@ -117,6 +124,7 @@ export default function Index() {
             }}
             isAnimated={true}
             scrollToEnd
+            yAxisOffset={weightGraphStartY}
           />
         ) : null}
       </View>
