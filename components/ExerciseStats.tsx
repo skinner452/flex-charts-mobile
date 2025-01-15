@@ -1,4 +1,4 @@
-import { ExerciseStatItem, ExerciseStats } from "@/types/exercises";
+import { ExerciseStatItem, ExerciseStats } from "@/types/exercise_stats";
 import { View } from "react-native";
 import { Text, useTheme } from "react-native-paper";
 
@@ -45,9 +45,14 @@ const StatComponent = ({
           gap: 16,
         }}
       >
-        <Counter label="Weight" value={item.weight} />
-        <Counter label="Reps" value={item.reps} />
-        <Counter label="Sets" value={item.sets} />
+        {item.weight ? <Counter label="Weight" value={item.weight} /> : null}
+        {item.reps ? <Counter label="Reps" value={item.reps} /> : null}
+        {item.distance ? (
+          <Counter label="Distance" value={item.distance} />
+        ) : null}
+        {item.durationSeconds ? (
+          <Counter label="Duration" value={item.durationSeconds} />
+        ) : null}
       </View>
     </View>
   );

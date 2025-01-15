@@ -1,6 +1,6 @@
 import { fetchFromAPI } from "@/api/base/fetchFromAPI";
 import { useBaseQuery } from "@/api/base/useBaseQuery";
-import { ExerciseStats } from "@/types/exercises";
+import { ExerciseStats } from "@/types/exercise_stats";
 import { UseQueryOptions } from "@tanstack/react-query";
 
 export const useGetExercisesIdStatsQueryKey = (id?: number) => {

@@ -1,23 +1,23 @@
 import { fetchFromAPI } from "@/api/base/fetchFromAPI";
 import { UseMutationOptions, useQueryClient } from "@tanstack/react-query";
 import { useGetWorkoutsQueryKey } from "./useGetWorkouts";
-import { Workout } from "@/types/workouts";
 import { useGetExercisesIdStatsQueryKey } from "../exercises/useGetExercisesIdStats";
 import { useBaseMutation } from "@/api/base/useBaseMutation";
 
 export const useDeleteWorkoutsId = (
-  options?: Partial<UseMutationOptions<void, Error, Workout>>
+  id: number,
+  options?: Partial<UseMutationOptions>
 ) => {
   const queryClient = useQueryClient();
 
   return useBaseMutation({
     ...options,
-    mutationFn: (workout) =>
+    mutationFn: () =>
       fetchFromAPI({
         method: "DELETE",
-        endpoint: `workouts/${workout.id}`,
+        endpoint: `workouts/${id}`,
       }),
-    onSuccess: (response, workout, ...rest) => {
+    onSuccess: (response, ...rest) => {
       queryClient.invalidateQueries({
         queryKey: useGetWorkoutsQueryKey(),
       });
@@ -25,7 +25,7 @@ export const useDeleteWorkoutsId = (
         queryKey: useGetExercisesIdStatsQueryKey(),
       });
 
-      options?.onSuccess?.(response, workout, ...rest);
+      options?.onSuccess?.(response, ...rest);
     },
   });
 };

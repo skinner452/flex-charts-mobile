@@ -8,6 +8,7 @@ import { ExerciseStatsComponent } from "@/components/ExerciseStats";
 import { FooterButtons } from "@/components/FooterButtons";
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { useDialog } from "@/providers/DialogProvider";
+import { formatWorkoutNumbers } from "@/utils/formatWorkoutNumbers";
 import dayjs from "dayjs";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useMemo, useState } from "react";
@@ -141,9 +142,7 @@ export default function Index() {
             }}
           >
             <Text>{dayjs(workout.created_on).format("MMMM D, YYYY")}</Text>
-            <Text>
-              {workout.weight} lbs x {workout.reps} reps x {workout.sets} sets
-            </Text>
+            <Text>{formatWorkoutNumbers(workout)}</Text>
           </View>
         )}
         ItemSeparatorComponent={() => <Divider />}

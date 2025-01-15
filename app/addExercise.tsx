@@ -1,7 +1,9 @@
 import { usePostExercises } from "@/api/routes/exercises/usePostExercises";
 import { AppView } from "@/components/AppView";
+import { ExerciseType } from "@/components/ExerciseType";
 import { FooterButtons } from "@/components/FooterButtons";
 import { FormItem } from "@/components/FormItem";
+import { ExerciseTypeID } from "@/types/exercise_types";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import { ScrollView, View } from "react-native";
@@ -11,6 +13,7 @@ export default function Index() {
   const router = useRouter();
 
   const [name, setName] = useState("");
+  const [typeID, setTypeID] = useState<ExerciseTypeID>(ExerciseTypeID.STRENGTH);
 
   const { mutateAsync: createExerciseAsync, isPending: isCreatingExercise } =
     usePostExercises({
@@ -23,6 +26,7 @@ export default function Index() {
   const createExercise = async () => {
     await createExerciseAsync({
       name,
+      exercise_type_id: typeID,
     });
   };
 
@@ -35,6 +39,30 @@ export default function Index() {
         <View style={{ gap: 24 }}>
           <FormItem label="Name">
             <TextInput value={name} onChangeText={(text) => setName(text)} />
+          </FormItem>
+          <FormItem label="Type">
+            {[
+              {
+                id: ExerciseTypeID.STRENGTH,
+                name: "Strength",
+                description:
+                  "Weight machines, free weights, body weight exercises",
+                icon: "arm-flex",
+              },
+              {
+                id: ExerciseTypeID.CARDIO,
+                name: "Cardio",
+                description: "Treadmills, ellipticals, bikes",
+                icon: "run-fast",
+              },
+            ].map((type) => (
+              <ExerciseType
+                {...type}
+                key={type.id}
+                selected={type.id === typeID}
+                onPress={() => setTypeID(type.id)}
+              />
+            ))}
           </FormItem>
         </View>
       </ScrollView>

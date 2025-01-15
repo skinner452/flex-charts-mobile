@@ -7,8 +7,11 @@ import { AppView } from "@/components/AppView";
 import { CriticalError } from "@/components/CriticalError";
 import { FooterButtons } from "@/components/FooterButtons";
 import { LoadingScreen } from "@/components/LoadingScreen";
+import { SessionWorkoutRow } from "@/components/SessionWorkoutRow";
 import { useDuration } from "@/hooks/useDuration";
 import { useDialog } from "@/providers/DialogProvider";
+import { formatWorkoutNumbers } from "@/utils/formatWorkoutNumbers";
+import { FlashList } from "@shopify/flash-list";
 import dayjs from "dayjs";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { FlatList, View } from "react-native";
@@ -44,16 +47,6 @@ export default function Index() {
   );
 
   const { createDialog } = useDialog();
-
-  const {
-    mutate: deleteWorkout,
-    variables: deletingWorkout,
-    isPending: isDeletingWorkout,
-  } = useDeleteWorkoutsId({
-    onError: (error) => {
-      console.error(error);
-    },
-  });
 
   const { mutateAsync: endSessionAsync, isPending: isEndingSession } =
     usePostSessionsIdEnd(parseInt(sessionID), {
@@ -160,42 +153,11 @@ export default function Index() {
         <Text variant="labelLarge">{duration}</Text>
       </View>
       <Divider />
-      <FlatList
+      <FlashList
         data={workouts}
         ItemSeparatorComponent={() => <Divider />}
         renderItem={({ item: workout }) => (
-          <TouchableRipple
-            onPress={() => navigateToExercise(workout.exercise.id)}
-          >
-            <View
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                gap: 8,
-                padding: 16,
-              }}
-            >
-              <Text variant="bodyLarge" style={{ flex: 1, fontWeight: "bold" }}>
-                {workout.exercise.name}
-              </Text>
-              <Text variant="bodyLarge">
-                {workout.weight} lbs x {workout.reps} reps x {workout.sets} sets
-              </Text>
-              {isSessionEnded ? null : (
-                <IconButton
-                  icon="delete"
-                  mode="contained"
-                  onPress={() => deleteWorkout(workout)}
-                  loading={
-                    isDeletingWorkout && deletingWorkout.id === workout.id
-                  }
-                  disabled={
-                    isDeletingWorkout && deletingWorkout.id === workout.id
-                  }
-                />
-              )}
-            </View>
-          </TouchableRipple>
+          <SessionWorkoutRow workout={workout} canDelete={!isSessionEnded} />
         )}
         ListFooterComponent={
           isSessionEnded ? null : (
