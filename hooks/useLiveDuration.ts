@@ -1,7 +1,4 @@
-import {
-  DurationFormat,
-  formatDurationFromSeconds,
-} from "@/utils/formatDuration";
+import { DurationFormat, formatDurationFromSeconds } from "@/utils/duration";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 

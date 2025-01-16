@@ -1,6 +1,6 @@
 import { useGetExercisesIdStats } from "@/api/routes/exercises/useGetExercisesIdStats";
 import { ExerciseStatItem } from "@/types/exercise_stats";
-import { formatDurationFromSeconds } from "@/utils/formatDuration";
+import { formatDurationFromSeconds } from "@/utils/duration";
 import { View } from "react-native";
 import { Text, useTheme } from "react-native-paper";
 

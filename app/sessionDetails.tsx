@@ -1,14 +1,13 @@
 import { useDeleteSessionsId } from "@/api/routes/sessions/useDeleteSessionsId";
 import { useGetSessionsId } from "@/api/routes/sessions/useGetSessionsId";
 import { usePostSessionsIdEnd } from "@/api/routes/sessions/usePostSessionsIdEnd";
-import { useDeleteWorkoutsId } from "@/api/routes/workouts/useDeleteWorkoutsId";
 import { useGetWorkouts } from "@/api/routes/workouts/useGetWorkouts";
 import { AppView } from "@/components/AppView";
 import { CriticalError } from "@/components/CriticalError";
 import { FooterButtons } from "@/components/FooterButtons";
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { SessionWorkoutRow } from "@/components/SessionWorkoutRow";
-import { useLiveDuration } from "@/hooks/useDuration";
+import { useLiveDuration } from "@/hooks/useLiveDuration";
 import { useDialog } from "@/providers/DialogProvider";
 import { FlashList } from "@shopify/flash-list";
 import dayjs from "dayjs";
@@ -29,7 +28,7 @@ export default function Index() {
     sessionID: parseInt(sessionID),
   });
 
-  const duration = useLiveDuration(
+  const liveDuration = useLiveDuration(
     session
       ? {
           startTime: session.created_on,
@@ -114,13 +113,6 @@ export default function Index() {
     });
   };
 
-  const navigateToExercise = (exerciseID: number) => {
-    router.navigate({
-      pathname: "/exerciseDetails",
-      params: { exerciseID: exerciseID.toString() },
-    });
-  };
-
   if (isSessionLoading || isWorkoutsLoading) {
     return <LoadingScreen />;
   }
@@ -143,7 +135,7 @@ export default function Index() {
             ? ` - ${dayjs(session.ended_on).format("h:mm A")}`
             : ""}
         </Text>
-        <Text variant="labelLarge">{duration}</Text>
+        <Text variant="labelLarge">{liveDuration}</Text>
       </View>
       <Divider />
       <FlashList

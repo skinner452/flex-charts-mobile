@@ -1,16 +1,30 @@
 import { ExerciseTypeID } from "@/types/exercise_types";
 import { Workout } from "@/types/workouts";
-import { formatDurationFromSeconds } from "./formatDuration";
+import { formatDurationFromSeconds } from "./duration";
 
 export const formatWorkoutNumbers = (workout: Workout) => {
   if (workout.exercise.exercise_type_id === ExerciseTypeID.STRENGTH) {
-    return `${workout.weight} lbs x ${workout.reps} reps x ${workout.sets} sets`;
+    return [
+      workout.weight ? `${workout.weight} lbs` : null,
+      workout.reps ? `${workout.reps} reps` : null,
+      workout.sets ? `${workout.sets} sets` : null,
+    ]
+      .filter((v) => v !== null)
+      .join(" x ");
   }
 
   if (workout.exercise.exercise_type_id === ExerciseTypeID.CARDIO) {
-    return `${workout.distance} mi, ${formatDurationFromSeconds(
-      workout.durationSeconds ?? 0
-    )}`;
+    return [
+      workout.distance ? `${workout.distance} mi` : null,
+      workout.durationSeconds
+        ? formatDurationFromSeconds(workout.durationSeconds)
+        : null,
+      workout.incline
+        ? `${workout.incline > 0 ? "+" : ""}${workout.incline}`
+        : null,
+    ]
+      .filter((v) => v !== null)
+      .join(", ");
   }
 
   return "";

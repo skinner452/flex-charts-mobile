@@ -9,7 +9,7 @@ import { View } from "react-native";
 import { Button, Text } from "react-native-paper";
 import ConfettiCannon from "react-native-confetti-cannon";
 import { useMemo } from "react";
-import { formatDurationFromTimes } from "@/utils/formatDuration";
+import { formatDurationFromTimes } from "@/utils/duration";
 import dayjs from "dayjs";
 
 export default function Index() {

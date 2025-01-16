@@ -1,8 +1,8 @@
 import { useGetExercises } from "@/api/routes/exercises/useGetExercises";
-import { useGetExercisesIdStats } from "@/api/routes/exercises/useGetExercisesIdStats";
 import { usePostWorkouts } from "@/api/routes/workouts/usePostWorkouts";
 import { AppView } from "@/components/AppView";
 import { CriticalError } from "@/components/CriticalError";
+import { DurationPicker } from "@/components/DurationPicker";
 import { ExerciseStatsComponent } from "@/components/ExerciseStats";
 import { FooterButtons } from "@/components/FooterButtons";
 import { FormItem } from "@/components/FormItem";
@@ -30,7 +30,7 @@ export default function Index() {
 
   // Cardio values
   const [distance, setDistance] = useState("");
-  const [duration, setDuration] = useState("");
+  const [durationSeconds, setDurationSeconds] = useState(0);
   const [incline, setIncline] = useState("");
 
   const { data: exercises, isLoading: isExercisesLoading } = useGetExercises();
@@ -68,7 +68,7 @@ export default function Index() {
     setSets("");
     setReps("");
     setDistance("");
-    setDuration("");
+    setDurationSeconds(0);
     setIncline("");
   };
 
@@ -89,7 +89,7 @@ export default function Index() {
       sets: sets ? parseInt(sets) : null,
       reps: reps ? parseInt(reps) : null,
       distance: distance ? parseFloat(distance) : null,
-      durationSeconds: duration ? parseInt(duration) : null,
+      durationSeconds: durationSeconds > 0 ? durationSeconds : null,
       incline: incline ? parseInt(incline) : null,
     });
   };
@@ -169,11 +169,15 @@ export default function Index() {
               </FormItem>
 
               <FormItem label="Duration">
-                <TextInput
+                <DurationPicker
+                  totalSeconds={durationSeconds}
+                  onChange={(totalSeconds) => setDurationSeconds(totalSeconds)}
+                />
+                {/* <TextInput
                   keyboardType="numeric"
                   onChangeText={(value) => setDuration(value)}
                   value={duration}
-                />
+                /> */}
               </FormItem>
 
               <FormItem label="Incline / Resistance">
