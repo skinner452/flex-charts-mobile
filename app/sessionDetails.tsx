@@ -8,20 +8,13 @@ import { CriticalError } from "@/components/CriticalError";
 import { FooterButtons } from "@/components/FooterButtons";
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { SessionWorkoutRow } from "@/components/SessionWorkoutRow";
-import { useDuration } from "@/hooks/useDuration";
+import { useLiveDuration } from "@/hooks/useDuration";
 import { useDialog } from "@/providers/DialogProvider";
-import { formatWorkoutNumbers } from "@/utils/formatWorkoutNumbers";
 import { FlashList } from "@shopify/flash-list";
 import dayjs from "dayjs";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { FlatList, View } from "react-native";
-import {
-  Button,
-  Divider,
-  IconButton,
-  Text,
-  TouchableRipple,
-} from "react-native-paper";
+import { View } from "react-native";
+import { Button, Divider, Text } from "react-native-paper";
 
 export default function Index() {
   const router = useRouter();
@@ -36,7 +29,7 @@ export default function Index() {
     sessionID: parseInt(sessionID),
   });
 
-  const duration = useDuration(
+  const duration = useLiveDuration(
     session
       ? {
           startTime: session.created_on,

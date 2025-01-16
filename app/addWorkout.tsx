@@ -21,7 +21,7 @@ export default function Index() {
     newExerciseID?: string;
   }>();
 
-  const [exerciseId, setExerciseId] = useState("");
+  const [exerciseID, setExerciseID] = useState("");
 
   // Strength values
   const [weight, setWeight] = useState("");
@@ -34,10 +34,6 @@ export default function Index() {
   const [incline, setIncline] = useState("");
 
   const { data: exercises, isLoading: isExercisesLoading } = useGetExercises();
-  const { data: exerciseStats } = useGetExercisesIdStats(
-    exerciseId ? parseInt(exerciseId) : 0,
-    { enabled: !!exerciseId }
-  );
 
   const { mutateAsync: createWorkoutAsync, isPending: isCreatingWorkout } =
     usePostWorkouts({
@@ -57,14 +53,14 @@ export default function Index() {
       (exercise) => exercise.id === parseInt(newExerciseID)
     );
     if (exercise) {
-      setExerciseId(newExerciseID);
+      setExerciseID(newExerciseID);
       router.setParams({ newExerciseID: undefined });
     }
   }, [exercises, newExerciseID]);
 
   const selectedExercise = useMemo(
-    () => exercises?.find((e) => e.id === parseInt(exerciseId)),
-    [exercises, exerciseId]
+    () => exercises?.find((e) => e.id === parseInt(exerciseID)),
+    [exercises, exerciseID]
   );
 
   const clearForm = () => {
@@ -78,7 +74,7 @@ export default function Index() {
 
   const selectExercise = (exerciseID: string | undefined) => {
     clearForm();
-    setExerciseId(exerciseID || "");
+    setExerciseID(exerciseID || "");
   };
 
   const addNewExercise = () => {
@@ -88,7 +84,7 @@ export default function Index() {
   const createWorkout = async () => {
     await createWorkoutAsync({
       sessionID: parseInt(sessionID),
-      exerciseID: parseInt(exerciseId),
+      exerciseID: parseInt(exerciseID),
       weight: weight ? parseFloat(weight) : null,
       sets: sets ? parseInt(sets) : null,
       reps: reps ? parseInt(reps) : null,
@@ -121,14 +117,14 @@ export default function Index() {
                 value: exercise.id.toString(),
               }))}
               onSelect={selectExercise}
-              value={exerciseId}
+              value={exerciseID}
             />
             <Button mode="text" onPress={() => addNewExercise()}>
               Add new exercise
             </Button>
 
-            {exerciseStats ? (
-              <ExerciseStatsComponent stats={exerciseStats} />
+            {exerciseID ? (
+              <ExerciseStatsComponent exerciseID={parseInt(exerciseID)} />
             ) : null}
           </FormItem>
 

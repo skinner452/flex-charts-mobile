@@ -100,7 +100,9 @@ export default function Index() {
         {exercise?.name}
       </Text>
 
-      {exerciseStats ? <ExerciseStatsComponent stats={exerciseStats} /> : null}
+      {exerciseStats ? (
+        <ExerciseStatsComponent exerciseID={parseInt(exerciseID)} />
+      ) : null}
 
       <View onLayout={(e) => setChartWidth(e.nativeEvent.layout.width)}>
         {weightGraphData.length > 1 && chartWidth > 0 ? (

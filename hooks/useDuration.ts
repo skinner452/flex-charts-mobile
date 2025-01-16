@@ -1,14 +1,17 @@
-import { pluralize } from "@/utils/pluralize";
+import {
+  DurationFormat,
+  formatDurationFromSeconds,
+} from "@/utils/formatDuration";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 
 type Props = {
   startTime: string;
   endTime: string | null;
-  format: "pretty" | "ticker";
+  format: DurationFormat;
 };
 
-export const useDuration = (props: Props | undefined) => {
+export const useLiveDuration = (props: Props | undefined) => {
   const [seconds, setSeconds] = useState<number | null>(null);
 
   useEffect(() => {
@@ -32,29 +35,5 @@ export const useDuration = (props: Props | undefined) => {
 
   if (props === undefined || seconds === null) return null;
 
-  const totalHours = Math.floor(seconds / 3600);
-  const totalMinutes = Math.floor(seconds / 60);
-  const totalSeconds = seconds;
-
-  const remainingHours = totalHours;
-  const remainingMinutes = totalMinutes % 60;
-  const remainingSeconds = totalSeconds % 60;
-
-  if (props?.format === "pretty") {
-    const parts = [];
-    if (totalHours > 0) {
-      parts.push(pluralize("hour", remainingHours));
-    }
-    if (totalMinutes > 0) {
-      parts.push(pluralize("minute", remainingMinutes));
-    }
-    if (totalSeconds > 0) {
-      parts.push(pluralize("second", remainingSeconds));
-    }
-    return parts.join(" ");
-  }
-
-  return [remainingHours, remainingMinutes, remainingSeconds]
-    .map((v) => String(v).padStart(2, "0"))
-    .join(":");
+  return formatDurationFromSeconds(seconds, props.format);
 };

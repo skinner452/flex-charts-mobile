@@ -3,12 +3,14 @@ import { useGetWorkouts } from "@/api/routes/workouts/useGetWorkouts";
 import { AppView } from "@/components/AppView";
 import { CriticalError } from "@/components/CriticalError";
 import { LoadingScreen } from "@/components/LoadingScreen";
-import { useDuration } from "@/hooks/useDuration";
 import { pluralize } from "@/utils/pluralize";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { View } from "react-native";
 import { Button, Text } from "react-native-paper";
 import ConfettiCannon from "react-native-confetti-cannon";
+import { useMemo } from "react";
+import { formatDurationFromTimes } from "@/utils/formatDuration";
+import dayjs from "dayjs";
 
 export default function Index() {
   const router = useRouter();
@@ -23,15 +25,15 @@ export default function Index() {
     sessionID: parseInt(sessionID),
   });
 
-  const duration = useDuration(
-    session
-      ? {
-          startTime: session.created_on,
-          endTime: session.ended_on,
-          format: "pretty",
-        }
-      : undefined
-  );
+  const duration = useMemo(() => {
+    if (!session) return null;
+
+    return formatDurationFromTimes(
+      dayjs(session.created_on),
+      dayjs(session.ended_on),
+      "pretty"
+    );
+  }, [session]);
 
   if (isSessionLoading || isWorkoutsLoading) {
     return <LoadingScreen />;
