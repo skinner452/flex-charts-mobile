@@ -8,9 +8,7 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import { View } from "react-native";
 import { Button, Text } from "react-native-paper";
 import ConfettiCannon from "react-native-confetti-cannon";
-import { useMemo } from "react";
-import { formatDurationFromTimes } from "@/utils/duration";
-import dayjs from "dayjs";
+import { useSessionDuration } from "@/hooks/useSessionDuration";
 
 export default function Index() {
   const router = useRouter();
@@ -25,17 +23,9 @@ export default function Index() {
     sessionID: parseInt(sessionID),
   });
 
-  const duration = useMemo(() => {
-    if (!session) return null;
+  const duration = useSessionDuration(session, "pretty");
 
-    return formatDurationFromTimes(
-      dayjs(session.created_on),
-      dayjs(session.ended_on),
-      "pretty"
-    );
-  }, [session]);
-
-  if (isSessionLoading || isWorkoutsLoading) {
+  if (isSessionLoading || isWorkoutsLoading || !duration) {
     return <LoadingScreen />;
   }
 

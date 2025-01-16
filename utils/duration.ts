@@ -1,7 +1,6 @@
-import { Dayjs } from "dayjs";
 import { pluralize } from "./pluralize";
 
-export type DurationFormat = "pretty" | "ticker";
+export type DurationFormat = "ticker" | "pretty";
 
 export const splitDurationSeconds = (totalSeconds: number) => {
   const hours = Math.floor(totalSeconds / 3600);
@@ -11,18 +10,9 @@ export const splitDurationSeconds = (totalSeconds: number) => {
   return [hours, minutes, seconds];
 };
 
-export const formatDurationFromTimes = (
-  start: Dayjs,
-  end: Dayjs,
-  format: DurationFormat = "ticker"
-) => {
-  const seconds = end.diff(start, "second");
-  return formatDurationFromSeconds(seconds, format);
-};
-
 export const formatDurationFromSeconds = (
   totalSeconds: number,
-  format: DurationFormat = "ticker"
+  format: DurationFormat
 ) => {
   const [hours, minutes, seconds] = splitDurationSeconds(totalSeconds);
 

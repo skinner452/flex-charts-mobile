@@ -7,7 +7,7 @@ import { CriticalError } from "@/components/CriticalError";
 import { FooterButtons } from "@/components/FooterButtons";
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { SessionWorkoutRow } from "@/components/SessionWorkoutRow";
-import { useLiveDuration } from "@/hooks/useLiveDuration";
+import { useSessionDuration } from "@/hooks/useSessionDuration";
 import { useDialog } from "@/providers/DialogProvider";
 import { FlashList } from "@shopify/flash-list";
 import dayjs from "dayjs";
@@ -28,15 +28,7 @@ export default function Index() {
     sessionID: parseInt(sessionID),
   });
 
-  const liveDuration = useLiveDuration(
-    session
-      ? {
-          startTime: session.created_on,
-          endTime: session.ended_on,
-          format: session.ended_on ? "pretty" : "ticker",
-        }
-      : undefined
-  );
+  const duration = useSessionDuration(session, "ticker");
 
   const { createDialog } = useDialog();
 
@@ -135,7 +127,7 @@ export default function Index() {
             ? ` - ${dayjs(session.ended_on).format("h:mm A")}`
             : ""}
         </Text>
-        <Text variant="labelLarge">{liveDuration}</Text>
+        <Text variant="labelLarge">{duration}</Text>
       </View>
       <Divider />
       <FlashList

@@ -17,7 +17,7 @@ export const formatWorkoutNumbers = (workout: Workout) => {
     return [
       workout.distance ? `${workout.distance} mi` : null,
       workout.durationSeconds
-        ? formatDurationFromSeconds(workout.durationSeconds)
+        ? formatDurationFromSeconds(workout.durationSeconds, "ticker")
         : null,
       workout.incline
         ? `${workout.incline > 0 ? "+" : ""}${workout.incline}`
