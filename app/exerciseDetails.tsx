@@ -8,6 +8,7 @@ import { ExerciseStatsComponent } from "@/components/ExerciseStats";
 import { FooterButtons } from "@/components/FooterButtons";
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { useDialog } from "@/providers/DialogProvider";
+import { ExerciseTypeID } from "@/types/exercise_types";
 import { formatWorkoutNumbers } from "@/utils/formatWorkoutNumbers";
 import dayjs from "dayjs";
 import { useLocalSearchParams, useRouter } from "expo-router";
@@ -39,23 +40,33 @@ export default function Index() {
 
   const [chartWidth, setChartWidth] = useState(0);
 
-  const weightGraphData = useMemo(() => {
+  const graphData = useMemo(() => {
     if (!workouts) return [];
 
     // Reverse the array so that the oldest workout is leftmost
     return workouts.toReversed().map((workout) => {
+      let value = 0;
+
+      if (exercise?.exercise_type_id === ExerciseTypeID.STRENGTH) {
+        value = workout.weight ?? 0;
+      }
+
+      if (exercise?.exercise_type_id === ExerciseTypeID.CARDIO) {
+        value = workout.distance ?? 0;
+      }
+
       return {
-        value: workout.weight,
+        value,
       } as lineDataItem;
     });
-  }, [workouts]);
+  }, [workouts, exercise]);
 
-  const weightGraphStartY = useMemo(() => {
-    if (weightGraphData.length === 0) return 0;
-    const values = weightGraphData.map((item) => item.value ?? 0);
+  const graphStartY = useMemo(() => {
+    if (graphData.length === 0) return 0;
+    const values = graphData.map((item) => item.value ?? 0);
     const minValue = Math.min(...values);
     return minValue >= 20 ? minValue - 10 : 0;
-  }, [weightGraphData]);
+  }, [graphData]);
 
   const { mutateAsync: deleteExerciseAsync, isPending: isExerciseDeleting } =
     useDeleteExercisesId(parseInt(exerciseID), {
@@ -105,9 +116,9 @@ export default function Index() {
       ) : null}
 
       <View onLayout={(e) => setChartWidth(e.nativeEvent.layout.width)}>
-        {weightGraphData.length > 1 && chartWidth > 0 ? (
+        {graphData.length > 1 && chartWidth > 0 ? (
           <LineChart
-            data={weightGraphData}
+            data={graphData}
             width={chartWidth - 60} // Subtract padding
             height={150}
             noOfSections={5}
@@ -126,7 +137,7 @@ export default function Index() {
             }}
             isAnimated={true}
             scrollToEnd
-            yAxisOffset={weightGraphStartY}
+            yAxisOffset={graphStartY}
           />
         ) : null}
       </View>
