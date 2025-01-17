@@ -1,8 +1,8 @@
 import { useGetExercises } from "@/api/routes/exercises/useGetExercises";
 import { AppView } from "@/components/AppView";
+import { FlashListWithLoading } from "@/components/FlashListWithLoading";
 import { FooterButtons } from "@/components/FooterButtons";
 import { ExerciseTypeNames } from "@/types/exercise_types";
-import { FlashList } from "@shopify/flash-list";
 import { useRouter } from "expo-router";
 import { View } from "react-native";
 import { Divider, Text, TouchableRipple } from "react-native-paper";
@@ -10,7 +10,7 @@ import { Divider, Text, TouchableRipple } from "react-native-paper";
 export default function Index() {
   const router = useRouter();
 
-  const { data: exercises } = useGetExercises();
+  const { data: exercises, isLoading: isExercisesLoading } = useGetExercises();
 
   const createExercise = () => {
     router.navigate({ pathname: "/addExercise" });
@@ -22,7 +22,8 @@ export default function Index() {
         Exercises
       </Text>
 
-      <FlashList
+      <FlashListWithLoading
+        isLoading={isExercisesLoading}
         estimatedItemSize={50}
         data={exercises}
         ItemSeparatorComponent={() => <Divider />}

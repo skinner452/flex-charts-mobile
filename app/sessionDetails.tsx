@@ -4,6 +4,7 @@ import { usePostSessionsIdEnd } from "@/api/routes/sessions/usePostSessionsIdEnd
 import { useGetWorkouts } from "@/api/routes/workouts/useGetWorkouts";
 import { AppView } from "@/components/AppView";
 import { CriticalError } from "@/components/CriticalError";
+import { FlashListWithLoading } from "@/components/FlashListWithLoading";
 import { FooterButtons } from "@/components/FooterButtons";
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { SessionWorkoutRow } from "@/components/SessionWorkoutRow";
@@ -106,7 +107,7 @@ export default function Index() {
     });
   };
 
-  if (isSessionLoading || isWorkoutsLoading) {
+  if (isSessionLoading) {
     return <LoadingScreen />;
   }
 
@@ -131,7 +132,8 @@ export default function Index() {
         <Text variant="labelLarge">{duration}</Text>
       </View>
       <Divider />
-      <FlashList
+      <FlashListWithLoading
+        isLoading={isWorkoutsLoading}
         estimatedItemSize={80}
         data={workouts}
         ItemSeparatorComponent={() => <Divider />}

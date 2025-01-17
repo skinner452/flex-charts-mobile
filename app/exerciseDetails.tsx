@@ -4,14 +4,13 @@ import { useGetExercisesIdStats } from "@/api/routes/exercises/useGetExercisesId
 import { useGetWorkouts } from "@/api/routes/workouts/useGetWorkouts";
 import { AppView } from "@/components/AppView";
 import { CriticalError } from "@/components/CriticalError";
-import { DateTimeItem } from "@/components/DateTimeItem";
 import { ExerciseStatsComponent } from "@/components/ExerciseStats";
+import { FlashListWithLoading } from "@/components/FlashListWithLoading";
 import { FooterButtons } from "@/components/FooterButtons";
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { WorkoutNumbers } from "@/components/WorkoutNumbers";
 import { useDialog } from "@/providers/DialogProvider";
 import { ExerciseTypeID } from "@/types/exercise_types";
-import { FlashList } from "@shopify/flash-list";
 import dayjs from "dayjs";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useMemo, useState } from "react";
@@ -144,9 +143,10 @@ export default function Index() {
         ) : null}
       </View>
 
-      <FlashList
+      <FlashListWithLoading
         estimatedItemSize={80}
         data={workouts}
+        isLoading={isWorkoutsLoading}
         renderItem={({ item: workout }) => (
           <View
             style={{

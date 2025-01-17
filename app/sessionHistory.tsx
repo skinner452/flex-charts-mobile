@@ -1,8 +1,8 @@
 import { useGetSessions } from "@/api/routes/sessions/useGetSessions";
 import { AppView } from "@/components/AppView";
+import { FlashListWithLoading } from "@/components/FlashListWithLoading";
 import { FooterButtons } from "@/components/FooterButtons";
 import { Session } from "@/types/sessions";
-import { FlashList } from "@shopify/flash-list";
 import dayjs from "dayjs";
 import { useRouter } from "expo-router";
 import { View } from "react-native";
@@ -11,7 +11,8 @@ import { Divider, Text, TouchableRipple } from "react-native-paper";
 export default function Index() {
   const router = useRouter();
 
-  const { data: pastSessions } = useGetSessions({ isActive: false });
+  const { data: pastSessions, isLoading: isPastSessionsLoading } =
+    useGetSessions({ isActive: false });
 
   const getSessionDate = (session: Session) => {
     return dayjs(session.created_on).format("MMMM D, YYYY");
@@ -33,7 +34,8 @@ export default function Index() {
       <Text variant="headlineLarge" style={{ textAlign: "center" }}>
         Session History
       </Text>
-      <FlashList
+      <FlashListWithLoading
+        isLoading={isPastSessionsLoading}
         estimatedItemSize={50}
         ItemSeparatorComponent={() => <Divider />}
         data={pastSessions}
