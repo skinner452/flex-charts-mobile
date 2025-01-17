@@ -26,6 +26,7 @@ export default function Index() {
   );
   const { data: workouts, isLoading: isWorkoutsLoading } = useGetWorkouts({
     sessionID: parseInt(sessionID),
+    sort: "created_on",
   });
 
   const duration = useSessionDuration(session, "ticker");

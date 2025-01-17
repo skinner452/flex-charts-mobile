@@ -27,7 +27,7 @@ export default function Index() {
   const { mutate: createSession, isPending: isCreatingSession } =
     usePostSessions({
       onSuccess: (session) => {
-        router.push({
+        router.navigate({
           pathname: `/sessionDetails`,
           params: { sessionID: session.id.toString() },
         });
@@ -40,14 +40,14 @@ export default function Index() {
   const resumeSession = async () => {
     if (!activeSessions || activeSessions.length === 0) return;
 
-    router.push({
+    router.navigate({
       pathname: `/sessionDetails`,
       params: { sessionID: activeSessions[0].id.toString() },
     });
   };
 
   const openSessionHistory = async () => {
-    router.push({
+    router.navigate({
       pathname: `/sessionHistory`,
     });
   };

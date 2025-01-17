@@ -4,6 +4,7 @@ import { useGetExercisesIdStats } from "@/api/routes/exercises/useGetExercisesId
 import { useGetWorkouts } from "@/api/routes/workouts/useGetWorkouts";
 import { AppView } from "@/components/AppView";
 import { CriticalError } from "@/components/CriticalError";
+import { DateTimeItem } from "@/components/DateTimeItem";
 import { ExerciseStatsComponent } from "@/components/ExerciseStats";
 import { FooterButtons } from "@/components/FooterButtons";
 import { LoadingScreen } from "@/components/LoadingScreen";
@@ -156,9 +157,14 @@ export default function Index() {
               padding: 16,
             }}
           >
-            <Text variant="titleSmall">
-              {dayjs(workout.created_on).format("MMMM D, YYYY")}
-            </Text>
+            <View>
+              <Text variant="titleSmall">
+                {dayjs(workout.created_on).format("MMMM D, YYYY")}
+              </Text>
+              <Text variant="labelSmall">
+                {dayjs(workout.created_on).format("HH:MM:ss A")}
+              </Text>
+            </View>
             <WorkoutNumbers workout={workout} />
           </View>
         )}
