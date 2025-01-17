@@ -162,7 +162,7 @@ export default function Index() {
                 {dayjs(workout.created_on).format("MMMM D, YYYY")}
               </Text>
               <Text variant="labelSmall">
-                {dayjs(workout.created_on).format("HH:MM:ss A")}
+                {dayjs(workout.created_on).format("hh:mm:ss A")}
               </Text>
             </View>
             <WorkoutNumbers workout={workout} />
