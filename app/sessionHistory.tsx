@@ -2,9 +2,10 @@ import { useGetSessions } from "@/api/routes/sessions/useGetSessions";
 import { AppView } from "@/components/AppView";
 import { FooterButtons } from "@/components/FooterButtons";
 import { Session } from "@/types/sessions";
+import { FlashList } from "@shopify/flash-list";
 import dayjs from "dayjs";
 import { useRouter } from "expo-router";
-import { FlatList, View } from "react-native";
+import { View } from "react-native";
 import { Divider, Text, TouchableRipple } from "react-native-paper";
 
 export default function Index() {
@@ -32,8 +33,8 @@ export default function Index() {
       <Text variant="headlineLarge" style={{ textAlign: "center" }}>
         Session History
       </Text>
-      <FlatList
-        style={{ flex: 1 }}
+      <FlashList
+        estimatedItemSize={50}
         ItemSeparatorComponent={() => <Divider />}
         data={pastSessions}
         renderItem={({ item: session }) => (

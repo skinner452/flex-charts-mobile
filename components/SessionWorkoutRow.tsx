@@ -1,10 +1,10 @@
 import { useDeleteWorkoutsId } from "@/api/routes/workouts/useDeleteWorkoutsId";
 import { Workout } from "@/types/workouts";
-import { formatWorkoutNumbers } from "@/utils/formatWorkoutNumbers";
 import { useRouter } from "expo-router";
 import { useCallback } from "react";
 import { View } from "react-native";
 import { IconButton, Text, TouchableRipple } from "react-native-paper";
+import { WorkoutNumbers } from "./WorkoutNumbers";
 
 type Props = {
   workout: Workout;
@@ -37,7 +37,7 @@ export const SessionWorkoutRow = ({ workout, canDelete }: Props) => {
         <Text variant="bodyLarge" style={{ flex: 1, fontWeight: "bold" }}>
           {workout.exercise.name}
         </Text>
-        <Text variant="bodyLarge">{formatWorkoutNumbers(workout)}</Text>
+        <WorkoutNumbers workout={workout} />
         {canDelete ? (
           <IconButton
             icon="delete"

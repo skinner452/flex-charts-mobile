@@ -7,13 +7,14 @@ import { CriticalError } from "@/components/CriticalError";
 import { ExerciseStatsComponent } from "@/components/ExerciseStats";
 import { FooterButtons } from "@/components/FooterButtons";
 import { LoadingScreen } from "@/components/LoadingScreen";
+import { WorkoutNumbers } from "@/components/WorkoutNumbers";
 import { useDialog } from "@/providers/DialogProvider";
 import { ExerciseTypeID } from "@/types/exercise_types";
-import { formatWorkoutNumbers } from "@/utils/formatWorkoutNumbers";
+import { FlashList } from "@shopify/flash-list";
 import dayjs from "dayjs";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useMemo, useState } from "react";
-import { FlatList, View } from "react-native";
+import { View } from "react-native";
 import { CurveType, LineChart, lineDataItem } from "react-native-gifted-charts";
 import { Divider, Text, useTheme } from "react-native-paper";
 
@@ -142,8 +143,8 @@ export default function Index() {
         ) : null}
       </View>
 
-      <FlatList
-        style={{ flex: 1 }}
+      <FlashList
+        estimatedItemSize={80}
         data={workouts}
         renderItem={({ item: workout }) => (
           <View
@@ -151,11 +152,14 @@ export default function Index() {
               flexDirection: "row",
               gap: 8,
               justifyContent: "space-between",
+              alignItems: "center",
               padding: 16,
             }}
           >
-            <Text>{dayjs(workout.created_on).format("MMMM D, YYYY")}</Text>
-            <Text>{formatWorkoutNumbers(workout)}</Text>
+            <Text variant="titleSmall">
+              {dayjs(workout.created_on).format("MMMM D, YYYY")}
+            </Text>
+            <WorkoutNumbers workout={workout} />
           </View>
         )}
         ItemSeparatorComponent={() => <Divider />}

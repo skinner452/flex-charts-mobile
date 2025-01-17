@@ -131,6 +131,7 @@ export default function Index() {
       </View>
       <Divider />
       <FlashList
+        estimatedItemSize={80}
         data={workouts}
         ItemSeparatorComponent={() => <Divider />}
         renderItem={({ item: workout }) => (

@@ -1,8 +1,10 @@
 import { useGetExercises } from "@/api/routes/exercises/useGetExercises";
 import { AppView } from "@/components/AppView";
 import { FooterButtons } from "@/components/FooterButtons";
+import { ExerciseTypeNames } from "@/types/exercise_types";
+import { FlashList } from "@shopify/flash-list";
 import { useRouter } from "expo-router";
-import { FlatList, View } from "react-native";
+import { View } from "react-native";
 import { Divider, Text, TouchableRipple } from "react-native-paper";
 
 export default function Index() {
@@ -20,7 +22,8 @@ export default function Index() {
         Exercises
       </Text>
 
-      <FlatList
+      <FlashList
+        estimatedItemSize={50}
         data={exercises}
         ItemSeparatorComponent={() => <Divider />}
         renderItem={({ item: exercise }) => (
@@ -41,6 +44,7 @@ export default function Index() {
               }}
             >
               <Text>{exercise.name}</Text>
+              <Text>{ExerciseTypeNames[exercise.exercise_type_id]}</Text>
             </View>
           </TouchableRipple>
         )}
