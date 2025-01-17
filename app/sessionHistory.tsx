@@ -45,10 +45,11 @@ export default function Index() {
                 gap: 8,
                 justifyContent: "space-between",
                 padding: 16,
+                alignItems: "center",
               }}
             >
-              <Text>{getSessionDate(session)}</Text>
-              <Text>
+              <Text variant="bodyLarge">{getSessionDate(session)}</Text>
+              <Text variant="labelSmall">
                 {getSessionTime(session.created_on)} -{" "}
                 {getSessionTime(session.ended_on ?? "")}
               </Text>

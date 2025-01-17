@@ -40,11 +40,14 @@ export default function Index() {
                 flexDirection: "row",
                 gap: 8,
                 justifyContent: "space-between",
+                alignItems: "center",
                 padding: 16,
               }}
             >
-              <Text>{exercise.name}</Text>
-              <Text>{ExerciseTypeNames[exercise.exercise_type_id]}</Text>
+              <Text variant="bodyLarge">{exercise.name}</Text>
+              <Text variant="labelSmall">
+                {ExerciseTypeNames[exercise.exercise_type_id]}
+              </Text>
             </View>
           </TouchableRipple>
         )}
