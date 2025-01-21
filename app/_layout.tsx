@@ -8,20 +8,26 @@ import "@/amplifyConfig";
 import { signIn } from "aws-amplify/auth";
 import { QueryProvider } from "@/providers/QueryProvider";
 import { DialogProvider } from "@/providers/DialogProvider";
+import { KeyboardAvoidingView, Platform } from "react-native";
 
 const App = () => {
   const { darkMode } = useDarkMode();
 
   return (
-    <PaperProvider theme={darkMode ? MD3DarkTheme : MD3LightTheme}>
-      <DialogProvider>
-        <Stack
-          screenOptions={{
-            header: () => null,
-          }}
-        />
-      </DialogProvider>
-    </PaperProvider>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : undefined}
+      style={{ flex: 1 }}
+    >
+      <PaperProvider theme={darkMode ? MD3DarkTheme : MD3LightTheme}>
+        <DialogProvider>
+          <Stack
+            screenOptions={{
+              header: () => null,
+            }}
+          />
+        </DialogProvider>
+      </PaperProvider>
+    </KeyboardAvoidingView>
   );
 };
 
