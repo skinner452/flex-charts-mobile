@@ -16,16 +16,16 @@ export default function Index() {
     sessionID: string;
   }>();
 
-  const { data: session, isLoading: isSessionLoading } = useGetSessionsId(
+  const { data: session, isFetching: isSessionFetching } = useGetSessionsId(
     parseInt(sessionID)
   );
-  const { data: workouts, isLoading: isWorkoutsLoading } = useGetWorkouts({
+  const { data: workouts, isFetching: isWorkoutsFetching } = useGetWorkouts({
     sessionID: parseInt(sessionID),
   });
 
   const duration = useSessionDuration(session, "pretty");
 
-  if (isSessionLoading || isWorkoutsLoading || !duration) {
+  if (isSessionFetching || isWorkoutsFetching || !duration) {
     return <LoadingScreen />;
   }
 

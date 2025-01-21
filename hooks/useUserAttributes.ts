@@ -7,21 +7,21 @@ import { useEffect, useState } from "react";
 export const useUserAttributes = () => {
   const [userAttributes, setUserAttributes] =
     useState<FetchUserAttributesOutput>();
-  const [userAttributesLoading, setUserAttributesLoading] = useState(true);
+  const [userAttributesFetching, setUserAttributesFetching] = useState(true);
 
   useEffect(() => {
-    setUserAttributesLoading(true);
+    setUserAttributesFetching(true);
     fetchUserAttributes()
       .then((userAttributes) => {
         setUserAttributes(userAttributes);
       })
       .finally(() => {
-        setUserAttributesLoading(false);
+        setUserAttributesFetching(false);
       });
   }, []);
 
   return {
     userAttributes,
-    userAttributesLoading,
+    userAttributesFetching,
   };
 };

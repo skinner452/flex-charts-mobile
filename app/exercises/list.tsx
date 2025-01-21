@@ -10,7 +10,8 @@ import { Divider, Text, TouchableRipple } from "react-native-paper";
 export default function Index() {
   const router = useRouter();
 
-  const { data: exercises, isLoading: isExercisesLoading } = useGetExercises();
+  const { data: exercises, isFetching: isExercisesFetching } =
+    useGetExercises();
 
   const createExercise = () => {
     router.navigate({ pathname: "/exercises/create" });
@@ -23,7 +24,7 @@ export default function Index() {
       </Text>
 
       <FlashListWithLoading
-        isLoading={isExercisesLoading}
+        isLoading={isExercisesFetching}
         estimatedItemSize={50}
         data={exercises}
         ItemSeparatorComponent={() => <Divider />}

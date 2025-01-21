@@ -33,7 +33,8 @@ export default function Index() {
   const [durationSeconds, setDurationSeconds] = useState(0);
   const [incline, setIncline] = useState("");
 
-  const { data: exercises, isLoading: isExercisesLoading } = useGetExercises();
+  const { data: exercises, isFetching: isExercisesFetching } =
+    useGetExercises();
 
   const { mutateAsync: createWorkoutAsync, isPending: isCreatingWorkout } =
     usePostWorkouts({
@@ -94,7 +95,7 @@ export default function Index() {
     });
   };
 
-  if (isExercisesLoading) {
+  if (isExercisesFetching) {
     return <LoadingScreen />;
   }
 

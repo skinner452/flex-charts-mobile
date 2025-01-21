@@ -27,14 +27,14 @@ export default function Index() {
     exerciseID: string;
   }>();
 
-  const { data: exercise, isLoading: isExerciseLoading } = useGetExercisesId(
+  const { data: exercise, isFetching: isExerciseFetching } = useGetExercisesId(
     parseInt(exerciseID)
   );
 
-  const { data: exerciseStats, isLoading: isExerciseStatsLoading } =
+  const { data: exerciseStats, isFetching: isExerciseStatsFetching } =
     useGetExercisesIdStats(parseInt(exerciseID));
 
-  const { data: workouts, isLoading: isWorkoutsLoading } = useGetWorkouts({
+  const { data: workouts, isFetching: isWorkoutsFetching } = useGetWorkouts({
     exerciseID: parseInt(exerciseID),
     sort: "-created_on",
   });
@@ -98,7 +98,7 @@ export default function Index() {
     });
   };
 
-  if (isExerciseLoading || isExerciseStatsLoading || isWorkoutsLoading) {
+  if (isExerciseFetching || isExerciseStatsFetching || isWorkoutsFetching) {
     return <LoadingScreen />;
   }
 
@@ -146,7 +146,7 @@ export default function Index() {
       <FlashListWithLoading
         estimatedItemSize={80}
         data={workouts}
-        isLoading={isWorkoutsLoading}
+        isLoading={isWorkoutsFetching}
         renderItem={({ item: workout }) => (
           <View
             style={{

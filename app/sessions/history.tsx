@@ -11,7 +11,7 @@ import { Divider, Text, TouchableRipple } from "react-native-paper";
 export default function Index() {
   const router = useRouter();
 
-  const { data: pastSessions, isLoading: isPastSessionsLoading } =
+  const { data: pastSessions, isFetching: isPastSessionsFetching } =
     useGetSessions({ isActive: false });
 
   const getSessionDate = (session: Session) => {
@@ -35,7 +35,7 @@ export default function Index() {
         Session History
       </Text>
       <FlashListWithLoading
-        isLoading={isPastSessionsLoading}
+        isLoading={isPastSessionsFetching}
         estimatedItemSize={50}
         ItemSeparatorComponent={() => <Divider />}
         data={pastSessions}

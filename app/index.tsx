@@ -13,15 +13,15 @@ import { useQueryClient } from "@tanstack/react-query";
 
 export default function Index() {
   const authenticator = useAuthenticator();
-  const { userAttributes, userAttributesLoading } = useUserAttributes();
+  const { userAttributes, userAttributesFetching } = useUserAttributes();
   const { toggleDarkMode } = useDarkMode();
   const insets = useSafeAreaInsets();
   const router = useRouter();
   const queryClient = useQueryClient();
 
-  const { data: activeSessions, isLoading: isActiveSessionsLoading } =
+  const { data: activeSessions, isFetching: isActiveSessionsFetching } =
     useGetSessions({ isActive: true });
-  const { data: pastSessions, isLoading: isPastSessionsLoading } =
+  const { data: pastSessions, isFetching: isPastSessionsFetching } =
     useGetSessions({ isActive: false });
 
   const { mutate: createSession, isPending: isCreatingSession } =
@@ -67,9 +67,9 @@ export default function Index() {
   };
 
   if (
-    userAttributesLoading ||
-    isActiveSessionsLoading ||
-    isPastSessionsLoading
+    userAttributesFetching ||
+    isActiveSessionsFetching ||
+    isPastSessionsFetching
   ) {
     return <LoadingScreen />;
   }

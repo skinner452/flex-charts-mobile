@@ -21,10 +21,10 @@ export default function Index() {
     sessionID: string;
   }>();
 
-  const { data: session, isLoading: isSessionLoading } = useGetSessionsId(
+  const { data: session, isFetching: isSessionFetching } = useGetSessionsId(
     parseInt(sessionID)
   );
-  const { data: workouts, isLoading: isWorkoutsLoading } = useGetWorkouts({
+  const { data: workouts, isFetching: isWorkoutsFetching } = useGetWorkouts({
     sessionID: parseInt(sessionID),
     sort: "created_on",
   });
@@ -106,7 +106,7 @@ export default function Index() {
     });
   };
 
-  if (isSessionLoading) {
+  if (isSessionFetching) {
     return <LoadingScreen />;
   }
 
@@ -132,7 +132,7 @@ export default function Index() {
       </View>
       <Divider />
       <FlashListWithLoading
-        isLoading={isWorkoutsLoading}
+        isLoading={isWorkoutsFetching}
         estimatedItemSize={80}
         data={workouts}
         ItemSeparatorComponent={() => <Divider />}
