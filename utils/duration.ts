@@ -26,8 +26,12 @@ export const formatDurationFromSeconds = (
       .join(" ");
   }
 
-  return [hours > 0 ? hours : null, minutes, seconds]
-    .filter((v) => v !== null)
-    .map((v) => String(v).padStart(2, "0"))
-    .join(":");
+  if (format === "ticker") {
+    return [hours > 0 ? hours : null, minutes, seconds]
+      .filter((v) => v !== null)
+      .map((v) => String(v).padStart(2, "0"))
+      .join(":");
+  }
+
+  return "";
 };

@@ -78,7 +78,7 @@ export default function Index() {
   };
 
   const addNewExercise = () => {
-    router.navigate("/addExercise");
+    router.navigate("/exercises/create");
   };
 
   const createWorkout = async () => {

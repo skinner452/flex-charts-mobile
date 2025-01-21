@@ -13,7 +13,7 @@ export default function Index() {
   const { data: exercises, isLoading: isExercisesLoading } = useGetExercises();
 
   const createExercise = () => {
-    router.navigate({ pathname: "/addExercise" });
+    router.navigate({ pathname: "/exercises/create" });
   };
 
   return (
@@ -31,7 +31,7 @@ export default function Index() {
           <TouchableRipple
             onPress={() =>
               router.navigate({
-                pathname: `/exerciseDetails`,
+                pathname: `/exercises/details`,
                 params: { exerciseID: exercise.id.toString() },
               })
             }

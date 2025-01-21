@@ -16,7 +16,7 @@ export const SessionWorkoutRow = ({ workout, canDelete }: Props) => {
 
   const navigateToExercise = useCallback(() => {
     router.navigate({
-      pathname: "/exerciseDetails",
+      pathname: "/exercises/details",
       params: { exerciseID: workout.exercise.id.toString() },
     });
   }, [workout, router]);

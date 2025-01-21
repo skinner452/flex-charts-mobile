@@ -28,7 +28,7 @@ export default function Index() {
     usePostSessions({
       onSuccess: (session) => {
         router.navigate({
-          pathname: `/sessionDetails`,
+          pathname: `/sessions/details`,
           params: { sessionID: session.id.toString() },
         });
       },
@@ -41,20 +41,20 @@ export default function Index() {
     if (!activeSessions || activeSessions.length === 0) return;
 
     router.navigate({
-      pathname: `/sessionDetails`,
+      pathname: `/sessions/details`,
       params: { sessionID: activeSessions[0].id.toString() },
     });
   };
 
   const openSessionHistory = async () => {
     router.navigate({
-      pathname: `/sessionHistory`,
+      pathname: `/sessions/history`,
     });
   };
 
   const openExerciseList = async () => {
     router.push({
-      pathname: `/exerciseList`,
+      pathname: `/exercises/list`,
     });
   };
 

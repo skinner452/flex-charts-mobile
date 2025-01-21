@@ -59,7 +59,7 @@ const StatComponent = ({
         {item.durationSeconds ? (
           <Counter
             label="Time"
-            value={formatDurationFromSeconds(item.durationSeconds)}
+            value={formatDurationFromSeconds(item.durationSeconds, "ticker")}
             isSmall
           />
         ) : null}

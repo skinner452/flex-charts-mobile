@@ -10,7 +10,6 @@ import { LoadingScreen } from "@/components/LoadingScreen";
 import { SessionWorkoutRow } from "@/components/SessionWorkoutRow";
 import { useSessionDuration } from "@/hooks/useSessionDuration";
 import { useDialog } from "@/providers/DialogProvider";
-import { FlashList } from "@shopify/flash-list";
 import dayjs from "dayjs";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { View } from "react-native";
@@ -38,7 +37,7 @@ export default function Index() {
     usePostSessionsIdEnd(parseInt(sessionID), {
       onSuccess: () => {
         router.navigate({
-          pathname: "/sessionCompleted",
+          pathname: "/sessions/completed",
           params: { sessionID },
         });
       },
@@ -102,7 +101,7 @@ export default function Index() {
 
   const addWorkout = () => {
     router.navigate({
-      pathname: "/addWorkout",
+      pathname: "/workouts/create",
       params: { sessionID },
     });
   };
