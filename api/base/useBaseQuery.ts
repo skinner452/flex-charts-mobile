@@ -25,8 +25,11 @@ export const useBaseQuery = <
 
   // Injected fix for brief moment when data is missing but no error
   if (!queryResponse.data && !queryResponse.isError) {
-    queryResponse.isLoading = true;
-    queryResponse.isFetching = true;
+    return {
+      ...queryResponse,
+      isLoading: true,
+      isFetching: true,
+    };
   }
 
   return queryResponse;
