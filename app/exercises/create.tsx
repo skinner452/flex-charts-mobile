@@ -3,6 +3,7 @@ import { AppView } from "@/components/AppView";
 import { ExerciseType } from "@/components/ExerciseType";
 import { FooterButtons } from "@/components/FooterButtons";
 import { FormItem } from "@/components/FormItem";
+import { useValidation } from "@/hooks/useValidation";
 import { ExerciseTypeID } from "@/types/exercise_types";
 import { useRouter } from "expo-router";
 import { useState } from "react";
@@ -14,6 +15,15 @@ export default function Index() {
 
   const [name, setName] = useState("");
   const [typeID, setTypeID] = useState<ExerciseTypeID>(ExerciseTypeID.STRENGTH);
+
+  const { fieldErrors, isValid } = useValidation({
+    name: {
+      value: name,
+      isRequired: true,
+      type: "string",
+      maxLength: 50,
+    },
+  });
 
   const { mutateAsync: createExerciseAsync, isPending: isCreatingExercise } =
     usePostExercises({
@@ -37,7 +47,7 @@ export default function Index() {
       </View>
       <ScrollView style={{ flex: 1 }}>
         <View style={{ gap: 24 }}>
-          <FormItem label="Name">
+          <FormItem label="Name" error={fieldErrors["name"]}>
             <TextInput value={name} onChangeText={(text) => setName(text)} />
           </FormItem>
           <FormItem label="Type">
@@ -70,6 +80,7 @@ export default function Index() {
         primaryLabel="Create"
         primaryAction={() => createExercise()}
         primaryIsLoading={isCreatingExercise}
+        primaryDisabled={!isValid}
         secondaryLabel="Go back"
         secondaryAction={router.back}
       />

@@ -5,6 +5,7 @@ type Props = {
   primaryLabel?: string;
   primaryAction?: () => void;
   primaryIsLoading?: boolean;
+  primaryDisabled?: boolean;
 
   secondaryLabel?: string;
   secondaryAction?: () => void;
@@ -32,7 +33,7 @@ export const FooterButtons = (props: Props) => {
             mode="contained"
             onPress={() => props.primaryAction?.()}
             loading={props.primaryIsLoading}
-            disabled={props.primaryIsLoading}
+            disabled={props.primaryIsLoading || props.primaryDisabled}
           >
             {props.primaryLabel}
           </Button>
