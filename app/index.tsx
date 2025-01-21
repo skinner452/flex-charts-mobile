@@ -53,7 +53,7 @@ export default function Index() {
   };
 
   const openExerciseList = async () => {
-    router.push({
+    router.navigate({
       pathname: `/exercises/list`,
     });
   };
