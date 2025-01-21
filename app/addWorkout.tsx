@@ -136,6 +136,7 @@ export default function Index() {
                   keyboardType="numeric"
                   onChangeText={(value) => setWeight(value)}
                   value={weight}
+                  returnKeyType="done"
                 />
               </FormItem>
 
@@ -144,6 +145,7 @@ export default function Index() {
                   keyboardType="numeric"
                   onChangeText={(value) => setReps(value)}
                   value={reps}
+                  returnKeyType="done"
                 />
               </FormItem>
 
@@ -152,6 +154,7 @@ export default function Index() {
                   keyboardType="numeric"
                   onChangeText={(value) => setSets(value)}
                   value={sets}
+                  returnKeyType="done"
                 />
               </FormItem>
             </>
@@ -165,6 +168,7 @@ export default function Index() {
                   keyboardType="numeric"
                   onChangeText={(value) => setDistance(value)}
                   value={distance}
+                  returnKeyType="done"
                 />
               </FormItem>
 
@@ -173,11 +177,6 @@ export default function Index() {
                   totalSeconds={durationSeconds}
                   onChange={(totalSeconds) => setDurationSeconds(totalSeconds)}
                 />
-                {/* <TextInput
-                  keyboardType="numeric"
-                  onChangeText={(value) => setDuration(value)}
-                  value={duration}
-                /> */}
               </FormItem>
 
               <FormItem label="Incline / Resistance">
@@ -185,6 +184,7 @@ export default function Index() {
                   keyboardType="numeric"
                   onChangeText={(value) => setIncline(value)}
                   value={incline}
+                  returnKeyType="done"
                 />
               </FormItem>
             </>
