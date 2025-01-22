@@ -8,6 +8,7 @@ import { FooterButtons } from "@/components/FooterButtons";
 import { FormItem } from "@/components/FormItem";
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { useValidation, ValidationFields } from "@/hooks/useValidation";
+import { ExerciseStatItem } from "@/types/exercise_stats";
 import { ExerciseTypeID } from "@/types/exercise_types";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useMemo, useState } from "react";
@@ -130,6 +131,20 @@ export default function Index() {
     router.navigate("/exercises/create");
   };
 
+  const pressExerciseStatItem = (item: ExerciseStatItem) => {
+    if (selectedExercise?.exercise_type_id === ExerciseTypeID.STRENGTH) {
+      setWeight(item.weight ? item.weight.toString() : "");
+      setSets(item.sets ? item.sets.toString() : "");
+      setReps(item.reps ? item.reps.toString() : "");
+    }
+
+    if (selectedExercise?.exercise_type_id === ExerciseTypeID.CARDIO) {
+      setDistance(item.distance ? item.distance.toString() : "");
+      setDurationSeconds(item.durationSeconds || 0);
+      setIncline(item.incline ? item.incline.toString() : "");
+    }
+  };
+
   const createWorkout = async () => {
     await createWorkoutAsync({
       sessionID: parseInt(sessionID),
@@ -176,7 +191,10 @@ export default function Index() {
             </Button>
 
             {exerciseID ? (
-              <ExerciseStatsComponent exerciseID={parseInt(exerciseID)} />
+              <ExerciseStatsComponent
+                exerciseID={parseInt(exerciseID)}
+                onPress={(item) => pressExerciseStatItem(item)}
+              />
             ) : null}
           </FormItem>
 

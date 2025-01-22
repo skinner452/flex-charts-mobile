@@ -3,13 +3,14 @@ import { ExerciseStatItem } from "@/types/exercise_stats";
 import { formatDurationFromSeconds } from "@/utils/duration";
 import dayjs from "dayjs";
 import { View } from "react-native";
-import { Text, useTheme } from "react-native-paper";
+import { Text, TouchableRipple, useTheme } from "react-native-paper";
 
 type Props = {
   exerciseID: number;
+  onPress?: (item: ExerciseStatItem) => void;
 };
 
-export const ExerciseStatsComponent = ({ exerciseID }: Props) => {
+export const ExerciseStatsComponent = ({ exerciseID, onPress }: Props) => {
   const { data: stats } = useGetExercisesIdStats(exerciseID);
 
   if (!stats) return null;
@@ -20,8 +21,12 @@ export const ExerciseStatsComponent = ({ exerciseID }: Props) => {
 
   return (
     <View style={{ flexDirection: "row", gap: 16 }}>
-      {stats.best ? <StatComponent item={stats.best} label="Best" /> : null}
-      {stats.last ? <StatComponent item={stats.last} label="Last" /> : null}
+      {stats.best ? (
+        <StatComponent item={stats.best} label="Best" onPress={onPress} />
+      ) : null}
+      {stats.last ? (
+        <StatComponent item={stats.last} label="Last" onPress={onPress} />
+      ) : null}
     </View>
   );
 };
@@ -29,46 +34,55 @@ export const ExerciseStatsComponent = ({ exerciseID }: Props) => {
 const StatComponent = ({
   label,
   item,
+  onPress,
 }: {
   label: string;
   item: ExerciseStatItem;
+  onPress?: (item: ExerciseStatItem) => void;
 }) => {
   const theme = useTheme();
 
   return (
-    <View
-      style={{
-        alignItems: "center",
-        flex: 1,
-        backgroundColor: theme.colors.elevation.level1,
-        padding: 8,
-        borderRadius: 16,
-        gap: 8,
-      }}
+    <TouchableRipple
+      style={{ flex: 1 }}
+      onPress={onPress ? () => onPress(item) : undefined}
     >
-      <Text variant="labelLarge">{label}</Text>
       <View
         style={{
-          flexDirection: "row",
-          gap: 16,
+          alignItems: "center",
           flex: 1,
+          backgroundColor: theme.colors.elevation.level1,
+          padding: 8,
+          borderRadius: 16,
+          gap: 8,
         }}
       >
-        {item.weight ? <Counter label="Weight" value={item.weight} /> : null}
-        {item.reps ? <Counter label="Reps" value={item.reps} /> : null}
-        {item.distance ? (
-          <Counter label="Dist (mi)" value={item.distance} />
-        ) : null}
-        {item.durationSeconds ? (
-          <Counter
-            label="Time"
-            value={formatDurationFromSeconds(item.durationSeconds, "ticker")}
-            isSmall
-          />
-        ) : null}
+        <Text variant="labelLarge">{label}</Text>
+        <View
+          style={{
+            flexDirection: "row",
+            gap: 16,
+            flex: 1,
+          }}
+        >
+          {item.weight ? <Counter label="Weight" value={item.weight} /> : null}
+          {item.reps ? <Counter label="Reps" value={item.reps} /> : null}
+          {item.distance ? (
+            <Counter label="Dist (mi)" value={item.distance} />
+          ) : null}
+          {item.durationSeconds ? (
+            <Counter
+              label="Time"
+              value={formatDurationFromSeconds(item.durationSeconds, "ticker")}
+              isSmall
+            />
+          ) : null}
+        </View>
+        <Text variant="labelSmall">
+          {dayjs(item.date).format("MM-DD-YYYY")}
+        </Text>
       </View>
-      <Text variant="labelSmall">{dayjs(item.date).format("MM-DD-YYYY")}</Text>
-    </View>
+    </TouchableRipple>
   );
 };
 
