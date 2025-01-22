@@ -13,3 +13,7 @@ This is an [Expo](https://expo.dev) project created with [`create-expo-app`](htt
 4. Build: `eas build`
 
 5. Submit: `eas submit`
+
+## Dependencies
+
+- Due to the nature of expo, packages will need to be updated regularly by running `npx expo install --check`
