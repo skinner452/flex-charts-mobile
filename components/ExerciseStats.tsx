@@ -1,6 +1,7 @@
 import { useGetExercisesIdStats } from "@/api/routes/exercises/useGetExercisesIdStats";
 import { ExerciseStatItem } from "@/types/exercise_stats";
 import { formatDurationFromSeconds } from "@/utils/duration";
+import dayjs from "dayjs";
 import { View } from "react-native";
 import { Text, useTheme } from "react-native-paper";
 
@@ -42,6 +43,7 @@ const StatComponent = ({
         backgroundColor: theme.colors.elevation.level1,
         padding: 8,
         borderRadius: 16,
+        gap: 8,
       }}
     >
       <Text variant="labelLarge">{label}</Text>
@@ -49,6 +51,7 @@ const StatComponent = ({
         style={{
           flexDirection: "row",
           gap: 16,
+          flex: 1,
         }}
       >
         {item.weight ? <Counter label="Weight" value={item.weight} /> : null}
@@ -64,6 +67,7 @@ const StatComponent = ({
           />
         ) : null}
       </View>
+      <Text variant="labelSmall">{dayjs(item.date).format("MM-DD-YYYY")}</Text>
     </View>
   );
 };
