@@ -3,10 +3,10 @@ import { AppView } from "@/components/AppView";
 import { ExerciseType } from "@/components/ExerciseType";
 import { FooterButtons } from "@/components/FooterButtons";
 import { FormItem } from "@/components/FormItem";
-import { useValidation } from "@/hooks/useValidation";
+import { useValidation, ValidationFields } from "@/hooks/useValidation";
 import { ExerciseTypeID } from "@/types/exercise_types";
 import { useRouter } from "expo-router";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { ScrollView, View } from "react-native";
 import { Text, TextInput } from "react-native-paper";
 
@@ -16,14 +16,17 @@ export default function Index() {
   const [name, setName] = useState("");
   const [typeID, setTypeID] = useState<ExerciseTypeID>(ExerciseTypeID.STRENGTH);
 
-  const { fieldErrors, isValid } = useValidation({
-    name: {
-      value: name,
-      isRequired: true,
-      type: "string",
-      maxLength: 50,
-    },
-  });
+  const validationFields = useMemo(() => {
+    return {
+      name: {
+        value: name,
+        isRequired: true,
+        type: "string",
+        maxLength: 50,
+      },
+    } as ValidationFields;
+  }, [name]);
+  const { fieldErrors, isValid } = useValidation(validationFields);
 
   const { mutateAsync: createExerciseAsync, isPending: isCreatingExercise } =
     usePostExercises({
