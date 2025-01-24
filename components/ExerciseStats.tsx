@@ -50,7 +50,6 @@ const StatComponent = ({
       <View
         style={{
           alignItems: "center",
-          flex: 1,
           backgroundColor: theme.colors.elevation.level1,
           padding: 8,
           borderRadius: 16,
@@ -62,7 +61,6 @@ const StatComponent = ({
           style={{
             flexDirection: "row",
             gap: 16,
-            flex: 1,
           }}
         >
           {item.weight ? <Counter label="Weight" value={item.weight} /> : null}
