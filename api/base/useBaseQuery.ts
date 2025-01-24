@@ -14,23 +14,11 @@ export const useBaseQuery = <
 >(
   options: UseQueryOptions<TQueryFnData, TError, TData, TQueryKey>,
   queryClient?: QueryClient
-) => {
-  const queryResponse = useQuery(
+) =>
+  useQuery(
     {
       staleTime: 1000 * 60 * 10, // 10 minutes
       ...options,
     },
     queryClient
   );
-
-  // Injected fix for brief moment when data is missing but no error
-  if (!queryResponse.data && !queryResponse.isError) {
-    return {
-      ...queryResponse,
-      isLoading: true,
-      isFetching: true,
-    };
-  }
-
-  return queryResponse;
-};

@@ -110,7 +110,7 @@ export default function Index() {
     return <LoadingScreen />;
   }
 
-  if (!session || !workouts) {
+  if (!session) {
     return <CriticalError />;
   }
 
