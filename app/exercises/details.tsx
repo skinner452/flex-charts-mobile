@@ -1,4 +1,3 @@
-import { useDeleteExercisesId } from "@/api/routes/exercises/useDeleteExercisesId";
 import { useGetExercisesId } from "@/api/routes/exercises/useGetExercisesId";
 import { useGetExercisesIdStats } from "@/api/routes/exercises/useGetExercisesIdStats";
 import { useGetWorkouts } from "@/api/routes/workouts/useGetWorkouts";
@@ -69,32 +68,10 @@ export default function Index() {
     return minValue >= 20 ? minValue - 10 : 0;
   }, [graphData]);
 
-  const { mutateAsync: deleteExerciseAsync, isPending: isExerciseDeleting } =
-    useDeleteExercisesId(parseInt(exerciseID), {
-      onSuccess: () => {
-        router.back();
-      },
-      onError: (error) => {
-        console.error(error);
-      },
-    });
-
-  const promptDelete = () => {
-    createDialog({
-      title: "Delete exercise",
-      content:
-        "Are you sure you want to delete this exercise? This will also delete all associated workout data.",
-      actions: [
-        {
-          label: "Cancel",
-        },
-        {
-          label: "Delete",
-          callback: async () => {
-            await deleteExerciseAsync();
-          },
-        },
-      ],
+  const onUpdate = () => {
+    router.navigate({
+      pathname: "/exercises/update",
+      params: { exerciseID },
     });
   };
 
@@ -172,9 +149,8 @@ export default function Index() {
       />
 
       <FooterButtons
-        primaryLabel="Delete"
-        primaryAction={() => promptDelete()}
-        primaryIsLoading={isExerciseDeleting}
+        primaryLabel="Update"
+        primaryAction={() => onUpdate()}
         secondaryLabel="Go back"
         secondaryAction={router.back}
       />

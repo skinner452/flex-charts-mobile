@@ -11,7 +11,7 @@ export const usePostExercises = (
 
   return useBaseMutation({
     ...options,
-    mutationFn: (data?: ExerciseCreate) =>
+    mutationFn: (data: ExerciseCreate) =>
       fetchFromAPI<Exercise>({
         method: "POST",
         endpoint: "exercises",
