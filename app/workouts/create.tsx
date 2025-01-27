@@ -7,6 +7,7 @@ import { ExerciseStatsComponent } from "@/components/ExerciseStats";
 import { FooterButtons } from "@/components/FooterButtons";
 import { FormItem } from "@/components/FormItem";
 import { LoadingScreen } from "@/components/LoadingScreen";
+import { NumericStepInput } from "@/components/NumericStepInput";
 import { useValidation, ValidationFields } from "@/hooks/useValidation";
 import { ExerciseStatItem } from "@/types/exercise_stats";
 import { ExerciseTypeID } from "@/types/exercise_types";
@@ -205,11 +206,10 @@ export default function Index() {
                 label="Weight (lbs)"
                 error={strengthValidation.fieldErrors.weight}
               >
-                <TextInput
-                  keyboardType="numeric"
-                  onChangeText={(value) => setWeight(value)}
+                <NumericStepInput
+                  setValue={(value) => setWeight(value)}
                   value={weight}
-                  returnKeyType="done"
+                  step={5}
                 />
               </FormItem>
 
@@ -217,11 +217,9 @@ export default function Index() {
                 label="Reps"
                 error={strengthValidation.fieldErrors.reps}
               >
-                <TextInput
-                  keyboardType="numeric"
-                  onChangeText={(value) => setReps(value)}
+                <NumericStepInput
+                  setValue={(value) => setReps(value)}
                   value={reps}
-                  returnKeyType="done"
                 />
               </FormItem>
 
@@ -229,11 +227,9 @@ export default function Index() {
                 label="Sets"
                 error={strengthValidation.fieldErrors.sets}
               >
-                <TextInput
-                  keyboardType="numeric"
-                  onChangeText={(value) => setSets(value)}
+                <NumericStepInput
+                  setValue={(value) => setSets(value)}
                   value={sets}
-                  returnKeyType="done"
                 />
               </FormItem>
             </>

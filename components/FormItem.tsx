@@ -3,11 +3,12 @@ import { PropsWithChildren, useMemo } from "react";
 import { View } from "react-native";
 import { Text, useTheme } from "react-native-paper";
 
-export const FormItem = ({
-  label,
-  children,
-  error,
-}: PropsWithChildren<{ label: string; error?: string }>) => {
+type Props = PropsWithChildren<{
+  label: string;
+  error?: string;
+}>;
+
+export const FormItem = ({ label, children, error }: Props) => {
   const theme = useTheme();
 
   const isRequiredError = useMemo(() => {
