@@ -86,7 +86,7 @@ export default function Index() {
       setExerciseID(newExerciseID);
       router.setParams({ newExerciseID: undefined });
     }
-  }, [exercises, newExerciseID]);
+  }, [exercises, newExerciseID, router]);
 
   const selectedExercise = useMemo(
     () => exercises?.find((e) => e.id === parseInt(exerciseID)),

@@ -1,3 +1,5 @@
+import React from "react";
+
 import { useGetSessionsId } from "@/api/routes/sessions/useGetSessionsId";
 import { useGetWorkouts } from "@/api/routes/workouts/useGetWorkouts";
 import { AppView } from "@/components/AppView";

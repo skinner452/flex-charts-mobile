@@ -1,3 +1,5 @@
+import React from "react";
+
 import { useGetSessions } from "@/api/routes/sessions/useGetSessions";
 import { AppView } from "@/components/AppView";
 import { FlashListWithLoading } from "@/components/FlashListWithLoading";

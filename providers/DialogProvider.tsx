@@ -11,6 +11,7 @@ type DialogOptions = {
 };
 
 const DialogContext = createContext({
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   createDialog: (_options: DialogOptions) => {},
 });
 

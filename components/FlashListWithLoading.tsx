@@ -1,3 +1,5 @@
+import React from "react";
+
 import { FlashList, FlashListProps } from "@shopify/flash-list";
 import { ActivityIndicator } from "react-native-paper";
 

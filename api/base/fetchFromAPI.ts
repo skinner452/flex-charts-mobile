@@ -1,5 +1,6 @@
 import { fetchAuthSession } from "aws-amplify/auth";
 import { isFieldError } from "./errors";
+import { DataValues, HTTPMethod } from "./types";
 
 export type FetchOptions = {
   method: HTTPMethod;

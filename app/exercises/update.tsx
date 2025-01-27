@@ -1,3 +1,5 @@
+import React from "react";
+
 import { useDeleteExercisesId } from "@/api/routes/exercises/useDeleteExercisesId";
 import { useGetExercisesId } from "@/api/routes/exercises/useGetExercisesId";
 import { usePutExercisesId } from "@/api/routes/exercises/usePutExercisesId";
@@ -56,7 +58,7 @@ export default function Index() {
       setName(apiData.name);
       setDataInitialized(true);
     }
-  }, [apiData]);
+  }, [apiData, dataInitialized]);
 
   const validationFields = useMemo(() => {
     return {

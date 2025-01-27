@@ -1,3 +1,5 @@
+import React from "react";
+
 import { Authenticator } from "@aws-amplify/ui-react-native";
 import { Stack } from "expo-router";
 import { PaperProvider, MD3LightTheme, MD3DarkTheme } from "react-native-paper";

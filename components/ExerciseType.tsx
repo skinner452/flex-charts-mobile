@@ -1,3 +1,5 @@
+import React from "react";
+
 import { View } from "react-native";
 import { Icon, Text, TouchableRipple, useTheme } from "react-native-paper";
 

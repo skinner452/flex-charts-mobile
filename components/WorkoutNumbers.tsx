@@ -1,3 +1,5 @@
+import React from "react";
+
 import { ExerciseTypeID } from "@/types/exercise_types";
 import { Workout } from "@/types/workouts";
 import { formatDurationFromSeconds } from "@/utils/duration";
@@ -22,7 +24,7 @@ export const WorkoutNumbers = ({ workout }: Props) => {
     }
 
     return "";
-  }, [exercise]);
+  }, [exercise, workout.weight, workout.distance]);
 
   const subtitle = useMemo(() => {
     if (exercise.exercise_type_id === ExerciseTypeID.STRENGTH) {
@@ -48,7 +50,13 @@ export const WorkoutNumbers = ({ workout }: Props) => {
     }
 
     return "";
-  }, []);
+  }, [
+    exercise.exercise_type_id,
+    workout.durationSeconds,
+    workout.incline,
+    workout.reps,
+    workout.sets,
+  ]);
 
   return (
     <View style={{ alignItems: "flex-end" }}>

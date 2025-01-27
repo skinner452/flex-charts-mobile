@@ -3,7 +3,7 @@ import { useBaseQuery } from "@/api/base/useBaseQuery";
 import { Session } from "@/types/sessions";
 import { UseQueryOptions } from "@tanstack/react-query";
 
-export const useGetSessionsIdQueryKey = (id: number) => {
+export const fetchGetSessionsIdQueryKey = (id: number) => {
   const queryKey = ["sessions", "id"] as any[];
   if (id) queryKey.push({ id });
   return queryKey;
@@ -17,6 +17,6 @@ export const useGetSessionsId = (
     ...options,
     queryFn: () =>
       fetchFromAPI<Session>({ method: "GET", endpoint: `sessions/${id}` }),
-    queryKey: useGetSessionsIdQueryKey(id),
+    queryKey: fetchGetSessionsIdQueryKey(id),
   });
 };

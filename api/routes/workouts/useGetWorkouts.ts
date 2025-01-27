@@ -3,7 +3,7 @@ import { useBaseQuery } from "@/api/base/useBaseQuery";
 import { Workout, WorkoutFilters } from "@/types/workouts";
 import { UseQueryOptions } from "@tanstack/react-query";
 
-export const useGetWorkoutsQueryKey = (filters?: WorkoutFilters) => {
+export const fetchGetWorkoutsQueryKey = (filters?: WorkoutFilters) => {
   const queryKey = ["workouts"] as any[];
   if (filters) queryKey.push(filters);
   return queryKey;
@@ -21,6 +21,6 @@ export const useGetWorkouts = (
         endpoint: "workouts",
         params: filters,
       }),
-    queryKey: useGetWorkoutsQueryKey(filters),
+    queryKey: fetchGetWorkoutsQueryKey(filters),
   });
 };

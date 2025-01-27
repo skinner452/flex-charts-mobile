@@ -1,3 +1,5 @@
+import React from "react";
+
 import { REQUIRED_ERROR } from "@/hooks/useValidation";
 import { PropsWithChildren, useMemo } from "react";
 import { View } from "react-native";

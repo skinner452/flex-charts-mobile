@@ -1,3 +1,5 @@
+import React from "react";
+
 import { splitDurationSeconds } from "@/utils/duration";
 import { useMemo } from "react";
 import { View } from "react-native";

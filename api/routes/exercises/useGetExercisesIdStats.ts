@@ -3,7 +3,7 @@ import { useBaseQuery } from "@/api/base/useBaseQuery";
 import { ExerciseStats } from "@/types/exercise_stats";
 import { UseQueryOptions } from "@tanstack/react-query";
 
-export const useGetExercisesIdStatsQueryKey = (id?: number) => {
+export const fetchGetExercisesIdStatsQueryKey = (id?: number) => {
   const queryKey = ["exercises", "id", "stats"] as any[];
   if (id) queryKey.push({ id });
   return queryKey;
@@ -20,6 +20,6 @@ export const useGetExercisesIdStats = (
         method: "GET",
         endpoint: `exercises/${id}/stats`,
       }),
-    queryKey: useGetExercisesIdStatsQueryKey(id),
+    queryKey: fetchGetExercisesIdStatsQueryKey(id),
   });
 };

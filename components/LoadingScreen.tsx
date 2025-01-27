@@ -1,3 +1,5 @@
+import React from "react";
+
 import { ActivityIndicator } from "react-native-paper";
 import { AppView } from "./AppView";
 

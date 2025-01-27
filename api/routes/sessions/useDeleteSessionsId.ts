@@ -1,8 +1,8 @@
 import { fetchFromAPI } from "@/api/base/fetchFromAPI";
 import { UseMutationOptions, useQueryClient } from "@tanstack/react-query";
-import { useGetSessionsQueryKey } from "./useGetSessions";
-import { useGetWorkoutsQueryKey } from "../workouts/useGetWorkouts";
-import { useGetExercisesIdStatsQueryKey } from "../exercises/useGetExercisesIdStats";
+import { fetchGetSessionsQueryKey } from "./useGetSessions";
+import { fetchGetWorkoutsQueryKey } from "../workouts/useGetWorkouts";
+import { fetchGetExercisesIdStatsQueryKey } from "../exercises/useGetExercisesIdStats";
 import { useBaseMutation } from "@/api/base/useBaseMutation";
 
 export const useDeleteSessionsId = (
@@ -20,13 +20,13 @@ export const useDeleteSessionsId = (
       }),
     onSuccess: (...rest) => {
       queryClient.invalidateQueries({
-        queryKey: useGetSessionsQueryKey(),
+        queryKey: fetchGetSessionsQueryKey(),
       });
       queryClient.invalidateQueries({
-        queryKey: useGetWorkoutsQueryKey(),
+        queryKey: fetchGetWorkoutsQueryKey(),
       });
       queryClient.invalidateQueries({
-        queryKey: useGetExercisesIdStatsQueryKey(),
+        queryKey: fetchGetExercisesIdStatsQueryKey(),
       });
 
       options?.onSuccess?.(...rest);

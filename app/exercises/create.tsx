@@ -1,3 +1,5 @@
+import React from "react";
+
 import { usePostExercises } from "@/api/routes/exercises/usePostExercises";
 import { AppView } from "@/components/AppView";
 import { ExerciseType } from "@/components/ExerciseType";

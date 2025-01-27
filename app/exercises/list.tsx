@@ -1,3 +1,5 @@
+import React from "react";
+
 import { useGetExercises } from "@/api/routes/exercises/useGetExercises";
 import { AppView } from "@/components/AppView";
 import { FlashListWithLoading } from "@/components/FlashListWithLoading";

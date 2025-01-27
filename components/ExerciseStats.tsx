@@ -1,3 +1,5 @@
+import React from "react";
+
 import { useGetExercisesIdStats } from "@/api/routes/exercises/useGetExercisesIdStats";
 import { ExerciseStatItem } from "@/types/exercise_stats";
 import { formatDurationFromSeconds } from "@/utils/duration";

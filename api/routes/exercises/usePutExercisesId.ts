@@ -1,7 +1,7 @@
 import { fetchFromAPI } from "@/api/base/fetchFromAPI";
 import { UseMutationOptions, useQueryClient } from "@tanstack/react-query";
-import { useGetExercisesQueryKey } from "./useGetExercises";
-import { useGetWorkoutsQueryKey } from "../workouts/useGetWorkouts";
+import { fetchGetExercisesQueryKey } from "./useGetExercises";
+import { fetchGetWorkoutsQueryKey } from "../workouts/useGetWorkouts";
 import { useBaseMutation } from "@/api/base/useBaseMutation";
 import { ExerciseUpdate } from "@/types/exercises";
 
@@ -21,11 +21,11 @@ export const usePutExercisesId = (
       }),
     onSuccess: (...rest) => {
       queryClient.invalidateQueries({
-        queryKey: useGetExercisesQueryKey(),
+        queryKey: fetchGetExercisesQueryKey(),
       });
 
       queryClient.invalidateQueries({
-        queryKey: useGetWorkoutsQueryKey(),
+        queryKey: fetchGetWorkoutsQueryKey(),
       });
 
       options?.onSuccess?.(...rest);

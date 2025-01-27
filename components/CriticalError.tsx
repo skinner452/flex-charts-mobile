@@ -1,3 +1,5 @@
+import React from "react";
+
 import { Button, Text } from "react-native-paper";
 import { AppView } from "./AppView";
 import { usePathname, useRouter } from "expo-router";

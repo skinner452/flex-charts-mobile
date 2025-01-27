@@ -3,7 +3,7 @@ import { useBaseQuery } from "@/api/base/useBaseQuery";
 import { Exercise } from "@/types/exercises";
 import { UseQueryOptions } from "@tanstack/react-query";
 
-export const useGetExercisesQueryKey = () => ["exercises"];
+export const fetchGetExercisesQueryKey = () => ["exercises"];
 
 export const useGetExercises = (
   options?: Partial<UseQueryOptions<Exercise[]>>
@@ -12,6 +12,6 @@ export const useGetExercises = (
     ...options,
     queryFn: () =>
       fetchFromAPI<Exercise[]>({ method: "GET", endpoint: "exercises" }),
-    queryKey: useGetExercisesQueryKey(),
+    queryKey: fetchGetExercisesQueryKey(),
   });
 };

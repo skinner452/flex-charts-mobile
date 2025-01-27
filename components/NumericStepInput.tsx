@@ -1,13 +1,8 @@
+import React from "react";
+
 import { useCallback, useMemo } from "react";
-import { StyleSheet, View } from "react-native";
-import {
-  Button,
-  IconButton,
-  Text,
-  TextInput,
-  TouchableRipple,
-  useTheme,
-} from "react-native-paper";
+import { View } from "react-native";
+import { Text, TextInput, TouchableRipple, useTheme } from "react-native-paper";
 
 type Props = {
   step?: number; // Default to 1
@@ -37,7 +32,7 @@ export const NumericStepInput = (props: Props) => {
       if (value < min) value = min;
       props.setValue(value.toString());
     },
-    [props.setValue]
+    [min, props]
   );
 
   return (

@@ -1,3 +1,5 @@
+import React from "react";
+
 import { useGetExercisesId } from "@/api/routes/exercises/useGetExercisesId";
 import { useGetExercisesIdStats } from "@/api/routes/exercises/useGetExercisesIdStats";
 import { useGetWorkouts } from "@/api/routes/workouts/useGetWorkouts";
@@ -8,7 +10,6 @@ import { FlashListWithLoading } from "@/components/FlashListWithLoading";
 import { FooterButtons } from "@/components/FooterButtons";
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { WorkoutNumbers } from "@/components/WorkoutNumbers";
-import { useDialog } from "@/providers/DialogProvider";
 import { ExerciseTypeID } from "@/types/exercise_types";
 import dayjs from "dayjs";
 import { useLocalSearchParams, useRouter } from "expo-router";
@@ -20,7 +21,6 @@ import { Divider, Text, useTheme } from "react-native-paper";
 export default function Index() {
   const router = useRouter();
   const theme = useTheme();
-  const { createDialog } = useDialog();
 
   const { exerciseID } = useLocalSearchParams<{
     exerciseID: string;

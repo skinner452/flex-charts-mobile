@@ -1,3 +1,5 @@
+import React from "react";
+
 import { useAuthenticator } from "@aws-amplify/ui-react-native";
 import { Button, FAB, Text } from "react-native-paper";
 import { useUserAttributes } from "@/hooks/useUserAttributes";
