@@ -23,4 +23,13 @@ export default [
     },
     rules: pluginReactHooks.configs.recommended.rules,
   },
+
+  {
+    // Override some rules
+    rules: {
+      "react-native/no-inline-styles": "off",
+      "react-native/no-raw-text": "off",
+      "@typescript-eslint/no-explicit-any": "off",
+    },
+  },
 ];
