@@ -3,6 +3,8 @@ import { Session } from "@/types/sessions";
 import { UseMutationOptions, useQueryClient } from "@tanstack/react-query";
 import { fetchGetSessionsQueryKey } from "./useGetSessions";
 import { useBaseMutation } from "@/api/base/useBaseMutation";
+import { invalidateQueryKeys } from "@/utils/invalidateQueryKeys";
+import { fetchStatsQueryKey } from "../stats/fetchStatsQueryKey";
 
 export const usePostSessions = (
   options?: Partial<UseMutationOptions<Session, Error>>
@@ -17,9 +19,11 @@ export const usePostSessions = (
         endpoint: "sessions",
       }),
     onSuccess: (session, ...rest) => {
-      queryClient.invalidateQueries({
-        queryKey: fetchGetSessionsQueryKey(),
-      });
+      invalidateQueryKeys(
+        queryClient,
+        fetchGetSessionsQueryKey(),
+        fetchStatsQueryKey()
+      );
 
       options?.onSuccess?.(session, ...rest);
     },

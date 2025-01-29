@@ -12,6 +12,7 @@ import { usePostSessions } from "@/api/routes/sessions/usePostSessions";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { CriticalError } from "@/components/CriticalError";
 import { useQueryClient } from "@tanstack/react-query";
+import { WeeklyStats } from "@/components/WeeklyStats";
 
 export default function Index() {
   const authenticator = useAuthenticator();
@@ -100,6 +101,9 @@ export default function Index() {
       />
 
       <Text variant="headlineLarge">Welcome {userAttributes.given_name}!</Text>
+
+      <WeeklyStats />
+
       {activeSessions.length > 0 ? (
         <Button mode="contained" icon="play" onPress={() => resumeSession()}>
           Resume session

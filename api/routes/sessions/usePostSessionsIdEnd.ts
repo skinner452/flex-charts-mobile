@@ -3,6 +3,7 @@ import { UseMutationOptions, useQueryClient } from "@tanstack/react-query";
 import { fetchGetSessionsQueryKey } from "./useGetSessions";
 import { fetchGetExercisesIdStatsQueryKey } from "../exercises/useGetExercisesIdStats";
 import { useBaseMutation } from "@/api/base/useBaseMutation";
+import { invalidateQueryKeys } from "@/utils/invalidateQueryKeys";
 
 export const usePostSessionsIdEnd = (
   id: number,
@@ -18,13 +19,11 @@ export const usePostSessionsIdEnd = (
         endpoint: `sessions/${id}/end`,
       }),
     onSuccess: (...rest) => {
-      queryClient.invalidateQueries({
-        queryKey: fetchGetSessionsQueryKey(),
-      });
-
-      queryClient.invalidateQueries({
-        queryKey: fetchGetExercisesIdStatsQueryKey(),
-      });
+      invalidateQueryKeys(
+        queryClient,
+        fetchGetSessionsQueryKey(),
+        fetchGetExercisesIdStatsQueryKey()
+      );
 
       options?.onSuccess?.(...rest);
     },

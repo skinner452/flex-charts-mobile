@@ -3,6 +3,7 @@ import { Exercise, ExerciseCreate } from "@/types/exercises";
 import { UseMutationOptions, useQueryClient } from "@tanstack/react-query";
 import { fetchGetExercisesQueryKey } from "./useGetExercises";
 import { useBaseMutation } from "@/api/base/useBaseMutation";
+import { invalidateQueryKeys } from "@/utils/invalidateQueryKeys";
 
 export const usePostExercises = (
   options?: Partial<UseMutationOptions<Exercise, Error, ExerciseCreate>>
@@ -18,9 +19,7 @@ export const usePostExercises = (
         data,
       }),
     onSuccess: (exercise, ...rest) => {
-      queryClient.invalidateQueries({
-        queryKey: fetchGetExercisesQueryKey(),
-      });
+      invalidateQueryKeys(queryClient, fetchGetExercisesQueryKey());
 
       options?.onSuccess?.(exercise, ...rest);
     },

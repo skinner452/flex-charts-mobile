@@ -4,6 +4,8 @@ import { fetchGetSessionsQueryKey } from "./useGetSessions";
 import { fetchGetWorkoutsQueryKey } from "../workouts/useGetWorkouts";
 import { fetchGetExercisesIdStatsQueryKey } from "../exercises/useGetExercisesIdStats";
 import { useBaseMutation } from "@/api/base/useBaseMutation";
+import { invalidateQueryKeys } from "@/utils/invalidateQueryKeys";
+import { fetchStatsQueryKey } from "../stats/fetchStatsQueryKey";
 
 export const useDeleteSessionsId = (
   id: number,
@@ -19,15 +21,13 @@ export const useDeleteSessionsId = (
         endpoint: `sessions/${id}`,
       }),
     onSuccess: (...rest) => {
-      queryClient.invalidateQueries({
-        queryKey: fetchGetSessionsQueryKey(),
-      });
-      queryClient.invalidateQueries({
-        queryKey: fetchGetWorkoutsQueryKey(),
-      });
-      queryClient.invalidateQueries({
-        queryKey: fetchGetExercisesIdStatsQueryKey(),
-      });
+      invalidateQueryKeys(
+        queryClient,
+        fetchGetSessionsQueryKey(),
+        fetchGetWorkoutsQueryKey(),
+        fetchGetExercisesIdStatsQueryKey(),
+        fetchStatsQueryKey()
+      );
 
       options?.onSuccess?.(...rest);
     },

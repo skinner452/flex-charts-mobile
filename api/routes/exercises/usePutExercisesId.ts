@@ -4,6 +4,7 @@ import { fetchGetExercisesQueryKey } from "./useGetExercises";
 import { fetchGetWorkoutsQueryKey } from "../workouts/useGetWorkouts";
 import { useBaseMutation } from "@/api/base/useBaseMutation";
 import { ExerciseUpdate } from "@/types/exercises";
+import { invalidateQueryKeys } from "@/utils/invalidateQueryKeys";
 
 export const usePutExercisesId = (
   id: number,
@@ -20,13 +21,11 @@ export const usePutExercisesId = (
         data,
       }),
     onSuccess: (...rest) => {
-      queryClient.invalidateQueries({
-        queryKey: fetchGetExercisesQueryKey(),
-      });
-
-      queryClient.invalidateQueries({
-        queryKey: fetchGetWorkoutsQueryKey(),
-      });
+      invalidateQueryKeys(
+        queryClient,
+        fetchGetExercisesQueryKey(),
+        fetchGetWorkoutsQueryKey()
+      );
 
       options?.onSuccess?.(...rest);
     },

@@ -4,6 +4,8 @@ import { UseMutationOptions, useQueryClient } from "@tanstack/react-query";
 import { fetchGetWorkoutsQueryKey } from "./useGetWorkouts";
 import { fetchGetExercisesIdStatsQueryKey } from "../exercises/useGetExercisesIdStats";
 import { useBaseMutation } from "@/api/base/useBaseMutation";
+import { invalidateQueryKeys } from "@/utils/invalidateQueryKeys";
+import { fetchStatsQueryKey } from "../stats/fetchStatsQueryKey";
 
 export const usePostWorkouts = (
   options?: Partial<UseMutationOptions<Workout, Error, WorkoutCreate>>
@@ -19,12 +21,12 @@ export const usePostWorkouts = (
         data,
       }),
     onSuccess: (workout, ...rest) => {
-      queryClient.invalidateQueries({
-        queryKey: fetchGetWorkoutsQueryKey(),
-      });
-      queryClient.invalidateQueries({
-        queryKey: fetchGetExercisesIdStatsQueryKey(),
-      });
+      invalidateQueryKeys(
+        queryClient,
+        fetchGetWorkoutsQueryKey(),
+        fetchGetExercisesIdStatsQueryKey(),
+        fetchStatsQueryKey()
+      );
 
       options?.onSuccess?.(workout, ...rest);
     },
