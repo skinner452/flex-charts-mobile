@@ -204,6 +204,7 @@ export default function Index() {
             <>
               <FormItem
                 label="Weight (lbs)"
+                hint="Leave blank for bodyweight exercises"
                 error={strengthValidation.fieldErrors.weight}
               >
                 <NumericStepInput

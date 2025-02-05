@@ -7,10 +7,11 @@ import { Text, useTheme } from "react-native-paper";
 
 type Props = PropsWithChildren<{
   label: string;
+  hint?: string;
   error?: string;
 }>;
 
-export const FormItem = ({ label, children, error }: Props) => {
+export const FormItem = ({ label, children, hint, error }: Props) => {
   const theme = useTheme();
 
   const isRequiredError = useMemo(() => {
@@ -35,6 +36,9 @@ export const FormItem = ({ label, children, error }: Props) => {
       </View>
 
       {children}
+
+      {hint ? <Text variant="labelSmall">{hint}</Text> : null}
+
       {error && !isRequiredError ? (
         <Text variant="labelSmall" style={{ color: theme.colors.error }}>
           {error}

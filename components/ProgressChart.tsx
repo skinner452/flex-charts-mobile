@@ -51,7 +51,7 @@ export const ProgressChart = ({ exercise }: Props) => {
     }, new Map<string, number>());
 
     const chartData: lineDataItem[] = [];
-    dateMap.forEach((value, date) => {
+    dateMap.forEach((value) => {
       chartData.push({
         value,
       });
