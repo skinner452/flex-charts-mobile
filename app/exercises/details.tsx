@@ -10,17 +10,14 @@ import { FlashListWithLoading } from "@/components/FlashListWithLoading";
 import { FooterButtons } from "@/components/FooterButtons";
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { WorkoutNumbers } from "@/components/WorkoutNumbers";
-import { ExerciseTypeID } from "@/types/exercise_types";
 import dayjs from "dayjs";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { useMemo, useState } from "react";
 import { View } from "react-native";
-import { CurveType, LineChart, lineDataItem } from "react-native-gifted-charts";
-import { Divider, Text, useTheme } from "react-native-paper";
+import { Divider, Text } from "react-native-paper";
+import { ProgressChart } from "@/components/ProgressChart";
 
 export default function Index() {
   const router = useRouter();
-  const theme = useTheme();
 
   const { exerciseID } = useLocalSearchParams<{
     exerciseID: string;
@@ -37,36 +34,6 @@ export default function Index() {
     exerciseID: parseInt(exerciseID),
     sort: "-created_on",
   });
-
-  const [chartWidth, setChartWidth] = useState(0);
-
-  const graphData = useMemo(() => {
-    if (!workouts) return [];
-
-    // Reverse the array so that the oldest workout is leftmost
-    return workouts.toReversed().map((workout) => {
-      let value = 0;
-
-      if (exercise?.exercise_type_id === ExerciseTypeID.STRENGTH) {
-        value = workout.weight ?? 0;
-      }
-
-      if (exercise?.exercise_type_id === ExerciseTypeID.CARDIO) {
-        value = workout.distance ?? 0;
-      }
-
-      return {
-        value,
-      } as lineDataItem;
-    });
-  }, [workouts, exercise]);
-
-  const graphStartY = useMemo(() => {
-    if (graphData.length === 0) return 0;
-    const values = graphData.map((item) => item.value ?? 0);
-    const minValue = Math.min(...values);
-    return minValue >= 20 ? minValue - 10 : 0;
-  }, [graphData]);
 
   const onUpdate = () => {
     router.navigate({
@@ -93,32 +60,7 @@ export default function Index() {
         <ExerciseStatsComponent exerciseID={parseInt(exerciseID)} />
       ) : null}
 
-      <View onLayout={(e) => setChartWidth(e.nativeEvent.layout.width)}>
-        {graphData.length > 1 && chartWidth > 0 ? (
-          <LineChart
-            data={graphData}
-            width={chartWidth - 60} // Subtract padding
-            height={150}
-            noOfSections={5}
-            thickness={5}
-            roundToDigits={0}
-            hideRules
-            hideDataPoints
-            curved
-            curveType={CurveType.QUADRATIC}
-            backgroundColor={theme.colors.backdrop}
-            color={theme.colors.primary}
-            yAxisColor={theme.colors.primary}
-            xAxisColor={theme.colors.primary}
-            yAxisTextStyle={{
-              color: theme.colors.primary,
-            }}
-            isAnimated={true}
-            scrollToEnd
-            yAxisOffset={graphStartY}
-          />
-        ) : null}
-      </View>
+      <ProgressChart exercise={exercise} />
 
       <FlashListWithLoading
         estimatedItemSize={80}

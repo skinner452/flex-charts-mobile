@@ -1,9 +1,9 @@
 import { useGetStatsWeekly } from "@/api/routes/stats/useGetStatsWeekly";
 import { getDateFromDow } from "@/utils/getDateFromDow";
 import { round } from "@/utils/round";
-import { useMemo } from "react";
+import React, { useMemo } from "react";
 import { View } from "react-native";
-import { ActivityIndicator, Icon, Text, useTheme } from "react-native-paper";
+import { ActivityIndicator, Text, useTheme } from "react-native-paper";
 
 export const WeeklyStats = () => {
   const { data, isFetching } = useGetStatsWeekly({

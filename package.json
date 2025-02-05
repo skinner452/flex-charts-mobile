@@ -10,7 +10,7 @@
     "ios": "expo run:ios",
     "ios-device": "expo run:ios --device --configuration Release",
     "test": "jest --watchAll",
-    "lint": "expo lint",
+    "lint": "npx eslint .",
     "copy-types": "rm -rf ./types && cp -r ../flex-charts-api/types ./types"
   },
   "jest": {
