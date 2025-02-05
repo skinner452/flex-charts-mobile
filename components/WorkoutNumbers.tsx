@@ -60,8 +60,8 @@ export const WorkoutNumbers = ({ workout }: Props) => {
 
   return (
     <View style={{ alignItems: "flex-end" }}>
-      <Text variant="titleMedium">{title}</Text>
-      <Text variant="labelSmall">{subtitle}</Text>
+      {title ? <Text variant="titleMedium">{title}</Text> : null}
+      {subtitle ? <Text variant="labelSmall">{subtitle}</Text> : null}
     </View>
   );
 
