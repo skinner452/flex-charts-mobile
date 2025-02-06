@@ -1,28 +1,40 @@
 import { useGetWorkouts } from "@/api/routes/workouts/useGetWorkouts";
 import { ExerciseTypeID } from "@/types/exercise_types";
 import { Exercise } from "@/types/exercises";
+import { useFont } from "@shopify/react-native-skia";
 import dayjs from "dayjs";
-import React, { useMemo, useState } from "react";
+import React, { useCallback, useMemo } from "react";
 import { View } from "react-native";
-import { CurveType, LineChart, lineDataItem } from "react-native-gifted-charts";
 import { useTheme } from "react-native-paper";
+import { CartesianChart, Line } from "victory-native";
+
+import Roboto from "../assets/fonts/Roboto.ttf";
 
 type Props = {
   exercise: Exercise;
 };
 
-export const ProgressChart = ({ exercise }: Props) => {
-  const [chartWidth, setChartWidth] = useState(0);
+type ChartData = {
+  day: number;
+  value: number;
+};
 
+export const ProgressChart = ({ exercise }: Props) => {
   const theme = useTheme();
+  const font = useFont(Roboto, 12);
 
   const { data: workouts } = useGetWorkouts({
     exerciseID: exercise.id,
     sort: "created_on",
   });
 
+  const minDate = useMemo(() => {
+    if (!workouts) return null;
+    return dayjs(workouts[0].created_on).startOf("day");
+  }, [workouts]);
+
   const chartData = useMemo(() => {
-    if (!workouts) return [];
+    if (!workouts || !minDate) return [];
 
     // Determine column to use
     let col: "reps" | "weight" | "distance";
@@ -37,67 +49,52 @@ export const ProgressChart = ({ exercise }: Props) => {
       return [];
     }
 
-    const dateMap = workouts.reduce((acc, workout) => {
-      const date = dayjs(workout.created_on).format("MM-DD-YYYY");
-
+    const data = workouts.reduce((acc, workout) => {
+      const day = dayjs(workout.created_on).diff(minDate, "day");
       const value = workout[col] ?? 0;
-      const currentValue = acc.get(date) ?? -1;
-
-      if (value > currentValue) {
-        acc.set(date, value);
-      }
-
+      acc.push({ day, value });
       return acc;
-    }, new Map<string, number>());
+    }, [] as ChartData[]);
 
-    const chartData: lineDataItem[] = [];
-    dateMap.forEach((value) => {
-      chartData.push({
-        value,
-      });
-    });
+    return data;
+  }, [exercise, workouts, minDate]);
 
-    return chartData;
-  }, [exercise, workouts]);
-
-  const chartStartY = useMemo(() => {
-    if (chartData.length === 0) return 0;
-    const values = chartData.map((item) => item.value ?? 0);
-    const minValue = Math.min(...values);
-    return minValue >= 20 ? minValue - 10 : 0;
-  }, [chartData]);
+  const formatXLabel = useCallback(
+    (value: number) => {
+      if (!minDate) return "";
+      const date = minDate.add(value, "day");
+      return date?.format("MMM D") ?? "";
+    },
+    [minDate]
+  );
 
   if (chartData.length < 2) return null;
 
   return (
-    <View onLayout={(e) => setChartWidth(e.nativeEvent.layout.width)}>
-      {chartWidth > 0 ? (
-        <LineChart
-          data={chartData}
-          width={chartWidth - 60} // Subtract padding
-          height={150}
-          noOfSections={4}
-          thickness={5}
-          roundToDigits={0}
-          hideRules
-          hideDataPoints
-          curved
-          curveType={CurveType.QUADRATIC}
-          backgroundColor={theme.colors.backdrop}
-          color={theme.colors.primary}
-          yAxisColor={theme.colors.primary}
-          xAxisColor={theme.colors.primary}
-          yAxisTextStyle={{
-            color: theme.colors.primary,
-          }}
-          isAnimated={true}
-          scrollToEnd
-          yAxisOffset={chartStartY}
-          xAxisLabelTextStyle={{
-            color: theme.colors.primary,
-          }}
-        />
-      ) : null}
+    <View style={{ height: 200 }}>
+      <CartesianChart
+        data={chartData}
+        xKey={"day"}
+        yKeys={["value"]}
+        axisOptions={{
+          font,
+          labelColor: theme.colors.inverseSurface,
+          lineColor: theme.colors.inversePrimary,
+          formatXLabel,
+        }}
+        padding={10}
+        domainPadding={{ left: 0, right: 20, top: 10, bottom: 10 }}
+      >
+        {/* 👇 render function exposes various data, such as points. */}
+        {({ points }) => (
+          <Line
+            points={points.value}
+            color={theme.colors.primary}
+            strokeWidth={3}
+            curveType="linear"
+          />
+        )}
+      </CartesianChart>
     </View>
   );
 };
