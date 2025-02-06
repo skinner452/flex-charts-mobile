@@ -25,6 +25,12 @@ export const WeeklyStats = () => {
       <Text variant="labelSmall">Week of {weekStart.format("MMMM Do")}</Text>
       <View style={{ flexDirection: "row", gap: 16 }}>
         <StatBox
+          title="Sessions"
+          total={data.sessions}
+          change={data.sessionsChange}
+          changePct={data.sessionsChangePct}
+        />
+        <StatBox
           title="Weight"
           total={data.weight}
           change={data.weightChange}
@@ -35,12 +41,6 @@ export const WeeklyStats = () => {
           total={data.distance}
           change={data.distanceChange}
           changePct={data.distanceChangePct}
-        />
-        <StatBox
-          title="Sessions"
-          total={data.sessions}
-          change={data.sessionsChange}
-          changePct={data.sessionsChangePct}
         />
       </View>
     </View>
