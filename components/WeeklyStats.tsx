@@ -22,7 +22,9 @@ export const WeeklyStats = () => {
 
   return (
     <View style={{ width: "100%", alignItems: "center", gap: 8 }}>
-      <Text variant="labelSmall">Week of {weekStart.format("MMMM Do")}</Text>
+      <Text variant="labelSmall">
+        Week of {weekStart.format("MMMM Do, YYYY")}
+      </Text>
       <View style={{ flexDirection: "row", gap: 16 }}>
         <StatBox
           title="Sessions"
