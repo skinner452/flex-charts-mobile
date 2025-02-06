@@ -1,4 +1,5 @@
 import { useGetStatsWeekly } from "@/api/routes/stats/useGetStatsWeekly";
+import { formatBigNumber } from "@/utils/formatBigNumber";
 import { getDateFromDow } from "@/utils/getDateFromDow";
 import { round } from "@/utils/round";
 import React, { useMemo } from "react";
@@ -68,13 +69,13 @@ const StatBox = (props: {
       style={{
         flex: 1,
         backgroundColor: theme.colors.elevation.level5,
-        padding: 16,
-        borderRadius: 16,
+        padding: 12,
+        borderRadius: 12,
         alignItems: "center",
       }}
     >
-      <Text variant="labelLarge">{props.title}</Text>
-      <Text variant="headlineLarge">{round(props.total)}</Text>
+      <Text variant="labelSmall">{props.title}</Text>
+      <Text variant="headlineMedium">{formatBigNumber(props.total)}</Text>
       <View
         style={{
           width: "100%",
@@ -83,16 +84,15 @@ const StatBox = (props: {
           justifyContent: "space-between",
         }}
       >
-        <Text style={{ color }}>
+        <Text style={{ color }} variant="labelSmall">
           {props.change > 0 ? "+" : ""}
-          {round(props.change)}
+          {formatBigNumber(props.change)}
         </Text>
-        <Text style={{ color }}>
+        <Text style={{ color }} variant="labelSmall">
           {props.changePct > 0 ? "+" : ""}
-          {round(props.changePct * 100)}%
+          {formatBigNumber(round(props.changePct * 100))}%
         </Text>
       </View>
-      <Text variant="labelSmall">vs last week</Text>
     </View>
   );
 };
