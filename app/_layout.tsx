@@ -12,6 +12,11 @@ import { QueryProvider } from "@/providers/QueryProvider";
 import { DialogProvider } from "@/providers/DialogProvider";
 import { KeyboardAvoidingView, Platform } from "react-native";
 
+// Import dayjs advanced formatting
+import advancedFormat from "dayjs/plugin/advancedFormat";
+import dayjs from "dayjs";
+dayjs.extend(advancedFormat);
+
 const App = () => {
   const { darkMode } = useDarkMode();
 

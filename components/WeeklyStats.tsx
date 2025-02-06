@@ -6,8 +6,10 @@ import { View } from "react-native";
 import { ActivityIndicator, Text, useTheme } from "react-native-paper";
 
 export const WeeklyStats = () => {
+  const weekStart = useMemo(() => getDateFromDow(1), []);
+
   const { data, isFetching } = useGetStatsWeekly({
-    weekStart: getDateFromDow(1).toISOString(),
+    weekStart: weekStart.toISOString(),
   });
 
   if (isFetching) {
@@ -19,25 +21,28 @@ export const WeeklyStats = () => {
   }
 
   return (
-    <View style={{ flexDirection: "row", gap: 16 }}>
-      <StatBox
-        title="Weight"
-        total={data.weight}
-        change={data.weightChange}
-        changePct={data.weightChangePct}
-      />
-      <StatBox
-        title="Distance"
-        total={data.distance}
-        change={data.distanceChange}
-        changePct={data.distanceChangePct}
-      />
-      <StatBox
-        title="Sessions"
-        total={data.sessions}
-        change={data.sessionsChange}
-        changePct={data.sessionsChangePct}
-      />
+    <View style={{ width: "100%", alignItems: "center", gap: 8 }}>
+      <Text variant="labelSmall">Week of {weekStart.format("MMMM Do")}</Text>
+      <View style={{ flexDirection: "row", gap: 16 }}>
+        <StatBox
+          title="Weight"
+          total={data.weight}
+          change={data.weightChange}
+          changePct={data.weightChangePct}
+        />
+        <StatBox
+          title="Distance"
+          total={data.distance}
+          change={data.distanceChange}
+          changePct={data.distanceChangePct}
+        />
+        <StatBox
+          title="Sessions"
+          total={data.sessions}
+          change={data.sessionsChange}
+          changePct={data.sessionsChangePct}
+        />
+      </View>
     </View>
   );
 };
