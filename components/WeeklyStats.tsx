@@ -85,12 +85,16 @@ const StatBox = (props: {
         }}
       >
         <Text style={{ color }} variant="labelSmall">
-          {props.change > 0 ? "+" : ""}
-          {formatBigNumber(props.change)}
+          {props.change === 0
+            ? "-"
+            : `${props.change > 0 ? "+" : ""} ${formatBigNumber(props.change)}`}
         </Text>
         <Text style={{ color }} variant="labelSmall">
-          {props.changePct > 0 ? "+" : ""}
-          {formatBigNumber(round(props.changePct * 100))}%
+          {props.changePct === 0
+            ? "-"
+            : `${props.changePct > 0 ? "+" : ""} ${formatBigNumber(
+                round(props.changePct * 100)
+              )}%`}
         </Text>
       </View>
     </View>
