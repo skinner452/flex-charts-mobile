@@ -1,5 +1,5 @@
-import { isFloat } from "@/utils/isFloat";
-import { isInt } from "@/utils/isInt";
+import { isPositiveFloat } from "@/utils/isPositiveFloat";
+import { isPositiveInt } from "@/utils/isPositiveInt";
 import { useMemo } from "react";
 
 // Exported so that we can check for this specific error
@@ -27,12 +27,12 @@ export const useValidation = (fields: ValidationFields) => {
             // If the field is empty and not required, we don't need to validate it
           }
         } else if (field.type === "number") {
-          if (!isInt(field.value)) {
-            acc[key] = "Must be a number";
+          if (!isPositiveInt(field.value)) {
+            acc[key] = "Must be a positive number";
           }
         } else if (field.type === "float") {
-          if (!isFloat(field.value)) {
-            acc[key] = "Must be a number"; // This makes more sense to the end user than "Must be a float"
+          if (!isPositiveFloat(field.value)) {
+            acc[key] = "Must be a positive number"; // This makes more sense to the end user than "Must be a float"
           }
         } else if (field.type === "string") {
           if (field.maxLength && field.value.length > field.maxLength) {
