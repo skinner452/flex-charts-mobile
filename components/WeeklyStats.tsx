@@ -1,13 +1,13 @@
 import { useGetStatsWeekly } from "@/api/routes/stats/useGetStatsWeekly";
 import { formatBigNumber } from "@/utils/formatBigNumber";
-import { getDateFromDow } from "@/utils/getDateFromDow";
+import { getLastDow } from "@/utils/getLastDow";
 import { round } from "@/utils/round";
 import React, { useMemo } from "react";
 import { View } from "react-native";
 import { ActivityIndicator, Text, useTheme } from "react-native-paper";
 
 export const WeeklyStats = () => {
-  const weekStart = useMemo(() => getDateFromDow(1), []);
+  const weekStart = useMemo(() => getLastDow(1), []);
 
   const { data, isFetching } = useGetStatsWeekly({
     weekStart: weekStart.toISOString(),
